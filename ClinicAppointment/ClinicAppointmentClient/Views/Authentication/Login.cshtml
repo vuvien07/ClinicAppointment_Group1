@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Login Page</title>
+    <link rel="stylesheet" href="~/css/authentication/Login.css" asp-append-version="true"/>
+</head>
+<body>
+    <div class="glass-card">
+        <div class="logo">
+            <div class="logo-circle"></div>
+            <div>
+                <div class="logo-text">HIS 365</div>
+                <div class="logo-subtext">MAKING BUSINESS SMARTER</div>
+            </div>
+        </div>
+        <h2 class="text-center text-xl font-semibold mb-8 text-gray-800">
+            Phần mềm đặt lịch phòng khám X
+        </h2>
+        <div class="space-y-4">
+            <div class="input-container">
+                <span class="input-icon">👤</span>
+                <input type="text" name="TenDangNhap" placeholder="Tên đăng nhập" class="input-field">
+                <span class="text-danger" id="Username"></span>
+            </div>
+            <div class="input-container">
+                <span class="input-icon">🔒</span>
+                <input type="password" name="MatKhau" placeholder="Mật khẩu" class="input-field">
+                <span class="text-danger" id="Password"></span>
+            </div>
+            <button class="login-button" onclick="LoginToSystem(event)">
+                Đăng nhập
+            </button>
+        </div>
+    </div>
+    <script src="~/js/authentication/Login.js" asp-append-version="true"></script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+﻿    <div class="modal fade" id="callModal" tabindex="-1" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Trợ lý AI đang hỗ trợ...</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="chatBox">
+                        <div class="ai">👩‍⚕️ Xin chào! Tôi là trợ lý ảo. Bạn muốn đặt khám vào ngày nào?</div>
+                    </div>
+                    <input type="text" id="userInput" class="form-control mt-3" placeholder="Nhập nội dung nói của bạn..." />
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success" onclick="sendMessage()">Gửi</button>
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Kết thúc cuộc gọi</button>
+                </div>
+            </div>
+        </div>
+    </div>

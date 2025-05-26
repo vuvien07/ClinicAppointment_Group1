@@ -1,0 +1,434 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Dashboard</title>
+    <link href="~/css/BookClinic.css" rel="stylesheet" asp-append-version="true" />
+</head>
+<body class="bg-gray-100 font-sans">
+    <!-- Header -->
+    <header class="bg-white shadow p-2 flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <div class="flex items-center">
+                <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mr-1">
+                    <span class="text-white text-lg">+</span>
+                </div>
+                <span class="text-blue-600 font-semibold">CLINIC 365</span>
+            </div>
+        </div>
+        <div class="flex items-center space-x-1">
+            <span class="text-gray-600" id="username-display">ADMIN</span>
+            <div class="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white text-xs">0</div>
+        </div>
+    </header>
+
+    <!-- Subheader Section -->
+    <div class="p-4">
+        <div class="flex justify-center mb-2">
+            <button class="fancy-button">Phần mềm tiếp đón</button>
+        </div>
+        <div class="d-flex justify-content-between">
+            <div class="mb-4">
+                <button class="tab btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Danh sách BN</button>
+            </div>
+            <div class="mb-4">
+                <button class="fancy-button" data-bs-toggle="modal" data-bs-target="#callModal">Hỗ trợ đặt khám</button>
+            </div>
+        </div>
+        <!-- Search Fields (Horizontal) with BHYT Checkbox -->
+        <div class="flex space-x-4 mb-4 items-end">
+            <div class="flex-1">
+                <label class="block text-sm font-medium text-gray-700">Mã BN</label>
+                <div class="relative">
+                    <input type="text" placeholder="Nhập mã bệnh nhân" class="border rounded p-1 w-full pl-8">
+                    <span class="icon-placeholder"></span>
+                </div>
+            </div>
+            <div class="flex-1">
+                <label class="block text-sm font-medium text-gray-700">Họ và tên</label>
+                <div class="relative">
+                    <input type="text" placeholder="Nhập họ và tên" class="border rounded p-1 w-full pl-8">
+                    <span class="icon-placeholder"></span>
+                </div>
+                <span class="text-danger" id="HovaTen"></span>
+            </div>
+            <div class="flex-1">
+                <label class="block text-sm font-medium text-gray-700">Căn cước</label>
+                <div class="relative">
+                    <input type="text" placeholder="Nhập số căn cước" class="border rounded p-1 w-full pl-8">
+                    <span class="icon-placeholder"></span>
+                </div>
+                <span class="text-danger" id="Cccd"></span>
+            </div>
+            <div class="flex items-center">
+                <input type="checkbox" class="custom-checkbox mr-2">
+                <label class="text-sm font-medium text-gray-700">Kiểm tra thẻ BHYT</label>
+            </div>
+        </div>
+        <!-- Filter Fields (Four Columns) -->
+        <div class="flex space-x-8 mb-4">
+            <!-- Left Column -->
+            <div class="space-y-4 flex-1 max-w-md">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Đối tượng</label>
+                    <select class="border rounded p-1 w-full">
+                        <option value="">Tất cả</option>
+                        <option value="yc">Yêu cầu</option>
+                        <option value="bhyt">BHYT</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Mã bệnh nhân</label>
+                    <div class="relative">
+                        <input type="text" placeholder="Nhập mã bệnh nhân" class="border rounded p-1 w-full pl-8">
+                        <span class="icon-placeholder"></span>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Giới tính</label>
+                    <select class="border rounded p-1 w-full" name="GioiTinh">
+                        <option value="">Tất cả</option>
+                        <option value="Nam">Nam</option>
+                        <option value="Nữ">Nữ</option>
+                    </select>
+                    <span class="text-danger" id="GioiTinh"></span>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">SN/Thôn/Phố</label>
+                    <input type="text" placeholder="Nhập thông tin" class="border rounded p-1 w-full">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">H/Q</label>
+                    <input type="text" placeholder="Nhập quận/huyện" class="border rounded p-1 w-full">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">ĐK khám</label>
+                    <select class="border rounded p-1 w-full">
+                        <option value="">Tất cả</option>
+                        <option value="luc">Lục</option>
+                        <option value="khac">Khác</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Dịch vụ</label>
+                    <select class="border rounded p-1 w-full">
+                        <option value="">Tất cả</option>
+                        <option value="dvck">DVCK - Công</option>
+                        <option value="khac">Khác</option>
+                    </select>
+                </div>
+            </div>
+            <!-- Middle Column -->
+            <div class="space-y-4 flex-1 max-w-md">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Họ và tên</label>
+                    <div class="relative">
+                        <input type="text" name="HovaTen" placeholder="Nhập họ và tên" class="border rounded p-1 w-full pl-8">
+                        <span class="icon-placeholder"></span>
+                    </div>
+                    <span class="text-danger" id="HovaTen"></span>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Ngày sinh</label>
+                    <input type="date" class="border rounded p-1 w-full" name="NgaySinhStr">
+                    <span class="text-danger" id="NgaySinhStr"></span>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Quốc tịch</label>
+                    <select class="border rounded p-1 w-full" name="QuocTich">
+                        <option value="">Tất cả</option>
+                        <option value="Việt Nam">Việt Nam</option>
+                        <option value="Khác">Khác</option>
+                    </select>
+                    <span class="text-danger" id="QuocTich"></span>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">TT/HQ/XP</label>
+                    <input type="text" placeholder="Nhập tỉnh/thành phố" class="border rounded p-1 w-full">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">X/P</label>
+                    <input type="text" placeholder="Nhập xã/phường" class="border rounded p-1 w-full">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Lúc</label>
+                    <input type="time" class="border rounded p-1 w-full" name="Gio">
+                    <span class="text-danger" id="Gio"></span>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Phòng khám</label>
+                    <select class="border rounded p-1 w-full">
+                        <option value="">Tất cả</option>
+                        <option value="p303">Phòng khám Răng Hàm Mặt - P303</option>
+                        <option value="p411b">Phòng khám NỘI 2 (HSTC) - P411B</option>
+                        <option value="p202">Phòng khám Da Liễu - P202</option>
+                    </select>
+                    <span class="text-danger" id="Gio"></span>
+                </div>
+            </div>
+            <!-- Right Column -->
+            <div class="space-y-4 flex-1 max-w-md">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Điện thoại</label>
+                    <div class="relative">
+                        <input type="text" name="SoDienThoai" placeholder="Nhập số điện thoại" class="border rounded p-1 w-full pl-8">
+                        <span class="icon-placeholder"></span>
+                    </div>
+                    <span class="text-danger" id="SoDienThoai"></span>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Căn cước</label>
+                    <div class="relative">
+                        <input type="text" name="Cccd" placeholder="Nhập số căn cước" class="border rounded p-1 w-full pl-8">
+                        <span class="icon-placeholder"></span>
+                    </div>
+                    <span class="text-danger" id="Cccd"></span>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Dân tộc</label>
+                    <select class="border rounded p-1 w-full" name="DanToc">
+                        <option value="">Tất cả</option>
+                        <option value="Kinh">Kinh</option>
+                        <option value="Khác">Khác</option>
+                    </select>
+                    <span class="text-danger" id="DanToc"></span>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">T/TP</label>
+                    <input type="text" placeholder="Nhập tỉnh/thành phố" class="border rounded p-1 w-full">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Nghề nghiệp</label>
+                    <input type="text" name="NgheNghiep" placeholder="Nhập nghe nghiệp" class="border rounded p-1 w-full">
+                    <span class="text-danger" id="NgheNghiep"></span>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Lý do khám</label>
+                    <input type="text" name="LyDoKham" placeholder="Nhập lý do khám" class="border rounded p-1 w-full">
+                    <span class="text-danger" id="LyDoKham"></span>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Nguồn/Người giới thiệu</label>
+                    <select class="border rounded p-1 w-full">
+                        <option value="">Tất cả</option>
+                        <option value="self">Tự đến</option>
+                        <option value="referral">Người giới thiệu</option>
+                    </select>
+                </div>
+            </div>
+            <!-- BHYT Column (without the checkbox) -->
+            <div class="space-y-4 flex-1 max-w-md">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Số BHYT</label>
+                    <input type="text" placeholder="" class="border rounded p-1 w-full">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">KCB BD</label>
+                    <input type="text" placeholder="" class="border rounded p-1 w-full">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Hạn thẻ</label>
+                    <input type="date" class="border rounded p-1 w-full">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Tuyển KCB</label>
+                    <select class="border rounded p-1 w-full">
+                        <option value="">Chọn...</option>
+                        <option value="kcb1">KCB 1</option>
+                        <option value="kcb2">KCB 2</option>
+                    </select>
+                </div>
+                <div class="flex space-x-2">
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium text-gray-700">Mức hưởng</label>
+                        <input type="text" placeholder="" class="border rounded p-1 w-full">
+                    </div>
+                    <div class="w-16">
+                        <label class="block text-sm font-medium text-gray-700"> </label>
+                        <input type="text" placeholder="%" class="border rounded p-1 w-full text-center" readonly>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Ngày miễn cùng chi trả</label>
+                    <input type="date" class="border rounded p-1 w-full">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Ngày đóng đủ 5 năm liên tục</label>
+                    <input type="date" class="border rounded p-1 w-full">
+                </div>
+            </div>
+        </div>
+        <!-- Action Buttons -->
+        <div class="flex justify-end space-x-4 mb-4">
+            <button class="action-button-new">Bệnh nhân mới (F1)</button>
+            <button class="action-button-save" onclick="submitBookClinicForm(event)">Lưu lại (F2)</button>
+        </div>
+    </div>
+
+    <!-- Clinic Info Tab Content -->
+    <div id="clinic-info-tab" class="tab-content">
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-blue-600 text-white">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Phòng</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Hẹn</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">ĐK</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Khám</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Tổng</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Phòng khám Răng Hàm Mặt - P303</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">1</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">1</td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Phòng khám NỘI 2 (HSTC) - P411B</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Phòng khám Bệnh 6</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Kho khám bệnh</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Phòng khám Da Liễu - P202</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Phòng khám Đông y - PHCN 1(CS1) - P409</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Phòng khám Ngoại - P403</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Main Content -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+
+                <!-- Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Tiêu đề Modal</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                </div>
+
+                <!-- Nội dung -->
+                <div class="modal-body">
+                    <partial name="~/Views/Shared/_Patients.cshtml"></partial>
+                </div>
+                <!-- Footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary">Lưu thay đổi</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="callModal" tabindex="-1" aria-labelledby="callModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Tiêu đề Modal</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                </div>
+                <div class="modal-body aiHelperContainer">
+                    <header class="app-header">
+                        <h1 class="heading">Hello, there</h1>
+                        <h2 class="sub-heading">How can I help you</h2>
+                    </header>
+                    <div class="chat-container">
+                        <div class="bot-message d-flex">
+                            <i class="bi bi-robot mt-2 me-2 bot-icon"></i>
+                            <p class="message-text color-white">
+                                sdnnss s sjds djsd sjdsjd sd jds
+                                sd sdsjd sj dj jỞ bước chào hỏi, bạn chỉ cần nói "Hi/ Hello" hoặc "Good morning/ afternoon/ evening!" trong trường hợp các bạn đang gặp mặt trực tiếp. Nếu muốn sắp xếp một cuộc hẹn qua điện thoại, bạn nên để người nghe biết họ đang nói chuyện với ai. (Ví dụ: Hello Julie, this is Sam./ This is Sam speaking.)
+
+                                Khi muốn sắp xếp một cuộc hẹn, bạn và người bạn muốn hẹn gặp cần thống nhất về thời gian gặp gỡ. Do đó, bạn cần cho đối phương biết bạn muốn hẹn gặp vào thời gian nào bằng một trong những câu hỏi sau:
+                            </p>
+                        </div>
+                        <div class="user-message">
+                            <p class="message-text">
+                                sjds sjdsd sjdsdjs dsjd sdjssdj sds djsd sjd sjd sdj sdjs djd js dsj dsjd sj sdjs djs js jsd
+                                Ở bước chào hỏi, bạn chỉ cần nói "Hi/ Hello" hoặc "Good morning/ afternoon/ evening!" trong trường hợp các bạn đang gặp mặt trực tiếp. Nếu muốn sắp xếp một cuộc hẹn qua điện thoại, bạn nên để người nghe biết họ đang nói chuyện với ai. (Ví dụ: Hello Julie, this is Sam./ This is Sam speaking.)
+
+                                Khi muốn sắp xếp một cuộc hẹn, bạn và người bạn muốn hẹn gặp cần thống nhất về thời gian gặp gỡ. Do đó, bạn cần cho đối phương biết bạn muốn hẹn gặp vào thời gian nào bằng một trong những câu hỏi sau:
+
+
+                                sjd sdj sdjds
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="prompt-container" style="width:100%">
+                        <div class="prompt-wrapper">
+                            <div class="prompt-form">
+                                <input type="text" class="prompt-input" name="userPrompt" id="input" placeholder="Type your message here">
+                                <i class="bi bi-mic-fill recordAudio" onclick="recordingAudio()"></i>
+                                <div class="prompt-action me-3">
+                                    <button class="btn btn-success" onclick="sendMessageAndReceiveAnswer()">Gửi</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Kết thúc cuộc gọi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/BookClinic.js" asp-append-version="true"></script>
+
+    <script>
+        // Function to get query parameter by name
+        function getQueryParam(name) {
+          const urlParams = new URLSearchParams(window.location.search);
+          return urlParams.get(name);
+        }
+
+        // Get the username from the query parameter and display it
+        document.addEventListener('DOMContentLoaded', () => {
+          const username = getQueryParam('username');
+          const usernameDisplay = document.getElementById('username-display');
+          if (username) {
+            usernameDisplay.textContent = username.toUpperCase();
+          } else {
+            usernameDisplay.textContent = 'ADMIN'; // Fallback if no username is provided
+          }
+        });
+    </script>
+</body>
+</html>
