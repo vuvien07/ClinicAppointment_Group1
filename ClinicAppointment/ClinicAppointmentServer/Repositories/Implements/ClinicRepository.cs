@@ -14,7 +14,12 @@ namespace ClinicAppointmentServer.Repositories.Implements
 
 		public async Task<List<PhongKham>> GetAllClinic()
 		{
-			return await _appointmentContext.PhongKhams.ToListAsync();
+			return await _appointmentContext.PhongKhams.Include(p => p.ThongTinPhongKhams.Where(t => t.Ngay == DateOnly.FromDateTime(DateTime.Now))).ToListAsync();
+		}
+
+		public async Task<PhongKham?> GetClinic(int id)
+		{
+			return await _appointmentContext.PhongKhams.Include(p => p.ThongTinPhongKhams).FirstOrDefaultAsync(p => p.PhongKhamId == id);
 		}
 	}
 }

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using ClinicAppointmentServer.Entiies;
 using ClinicAppointmentServer.Services;
 using ClinicAppointmentServer.Services.Implements;
+using ClinicAppointmentServer.Middlewares;
 
 namespace ClinicAppointmentServer
 {
@@ -15,6 +16,7 @@ namespace ClinicAppointmentServer
 			ConfigureServices(builder.Services);
 			builder.Services.AddAuthorization();
 			var app = builder.Build();
+			app.UseMiddleware<ExceptionHandlerMiddleware>();
 			app.UseCors("AllowAll");
 			app.UseAuthentication();
 			app.UseAuthorization();
@@ -50,6 +52,8 @@ namespace ClinicAppointmentServer
 			services.AddTransient<IClinicInfoRepository, ClinicInfoReporitory>();
 			services.AddTransient<IAccountRepository, AccountRepository>();
 			services.AddTransient<IBookClinicService, BookClinicService>();
+			services.AddTransient<IPlanScheduleRepository, PlanScheduleRepository>();
+			services.AddTransient<IPatientRepository, PatientRepository>();
 		}
 	}
 }

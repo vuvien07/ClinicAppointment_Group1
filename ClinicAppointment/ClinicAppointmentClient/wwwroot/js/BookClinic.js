@@ -1,11 +1,112 @@
-﻿window.onload = () => {
+﻿const host = window.location.hostname;
+window.onload = async () => {
     var params = new URLSearchParams(window.location.search);
-    if (params.has('isLoggingIn')){
+    if (params.has('isLoggingIn')) {
         showSnackbar("Đăng nhập thành công", "success");
         const newUrl = `${window.location.pathname}`;
         window.history.replaceState({}, '', newUrl);
     }
     document.querySelector('.chat-container').innerHTML = '';
+    await getClinicList();
+}
+
+async function startCall(e) {
+    e.preventDefault();
+    try {
+        const div = document.createElement('div');
+        div.className = 'bot-message d-flex';
+        const icon = document.createElement('i');
+        icon.className = 'bi bi-robot mt-2 me-2 bot-icon';
+        const text = document.createElement('p');
+        text.className = 'message-text color-white';
+        div.appendChild(icon);
+        let textt = 'Xin chào, chúng tôi là chuyên viên hỗ trợ bạn trong việc đặt lịch khám. Bạn có thể cung cấp cho hệ thống chúng tôi các thông tin cơ bản theo form?'
+        let formData = new FormData();
+        formData.append("text", textt);
+        const res = await fetch(`http://localhost:8001/tts`, {
+            method: "POST",
+            body: formData
+        });
+        if (res.ok) {
+            text.textContent = textt;
+            div.appendChild(text);
+            document.querySelector('.chat-container').appendChild(div);
+            const blob = await res.blob();
+            const audioUrl = URL.createObjectURL(blob);
+            const audio = new Audio(audioUrl);
+            audio.playbackRate = 1.3;
+            audio.play();
+
+        }
+    } catch (error) {
+        showSnackbar(error.message, "error");
+    }
+}
+
+async function getClinicList() {
+    try {
+        const res = await fetch(`http://${host}:5132/api/BookClinic/all`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+        if (res.ok) {
+            let json = await res.json();
+            await UpdateClinicList(json);
+            await UpdateSelectClinicList(json);
+        }
+
+    } catch (error) {
+        showSnackbar(error.message, "error");
+    }
+}
+
+async function textToSpeech(text) {
+    try {
+        text = normalizeText(text);
+        const formData = new FormData();
+        formData.append("text", text);
+        const res = await fetch(`http://localhost:8001/tts`, {
+            method: "POST",
+            body: formData
+        });
+        if (res.ok) {
+            const blob = await res.blob();
+            const audioUrl = URL.createObjectURL(blob);
+            const audio = new Audio(audioUrl);
+            audio.playbackRate = 1.2;
+            audio.play();
+        }
+    } catch (error) {
+        showSnackbar(error.message, "error");
+    }
+}
+
+async function UpdateClinicList(data) {
+    let contentHtml = ``;
+    data.forEach(item => {
+        contentHtml += `
+         <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.tenPhong}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">${item.thongTinPhongKhams[0]?.hen}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">${item.thongTinPhongKhams[0]?.dangKy}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">${item.thongTinPhongKhams[0]?.kham}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">1</td>
+                    </tr>
+        `;
+    });
+    document.getElementById("clinic-info-table").innerHTML = contentHtml;
+}
+
+async function UpdateSelectClinicList(data) {
+    let contentHtml = `<option value="0">Không</option>`;
+    data.forEach(item => {
+        contentHtml += `
+         <option value="${item.phongKhamId}">${item.tenPhong}</option>
+        `;
+    });
+    document.getElementById("select-clinic-section").innerHTML = contentHtml;
 }
 
 async function sendMessageAndReceiveAnswer() {
@@ -24,13 +125,12 @@ async function sendMessageAndReceiveAnswer() {
 
     // Thêm vào khung chat
     document.querySelector('.chat-container').appendChild(messageDiv);
-    await answerUserPrompt(input.value);
-
-    // Xoá nội dung input
-    input.value = "";
+    await answerUserPrompt(input);
 }
 
-async function answerUserPrompt(prompt) {
+async function answerUserPrompt(input) {
+    let prompt = input.value;
+    input.value = '';
     const div = document.createElement('div');
     div.className = 'bot-message d-flex';
     const icon = document.createElement('i');
@@ -43,7 +143,7 @@ async function answerUserPrompt(prompt) {
         div.appendChild(text);
         document.querySelector('.chat-container').appendChild(div);
 
-        const res = await fetch("http://localhost:5132/api/gemini/ask", {
+        const res = await fetch(`http://${host}:5132/api/gemini/ask`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -53,6 +153,7 @@ async function answerUserPrompt(prompt) {
         if (res.ok) {
             const json = await res.json();
             if (json.result) {
+                await textToSpeech(json.result);
                 text.textContent = json.result;
                 const parts = json.result?.split("\n");
 
@@ -199,7 +300,7 @@ async function speechToText(blob) {
     try {
         const formData = new FormData();
         formData.append("file", blob, "recording.wav");
-        const res = await fetch("http://localhost:8080/speech-to-text", {
+        const res = await fetch(`http://${host}:8080/speech-to-text`, {
             method: "POST",
             body: formData
         });
@@ -207,7 +308,7 @@ async function speechToText(blob) {
             const json = await res.json();
             document.querySelector('input[name="userPrompt"]').value = json.transcription;
         } else {
-        showSnackbar("Có lỗi xảy ra trong quá trình nhận diện giọng nói", "error");
+            showSnackbar("Có lỗi xảy ra trong quá trình nhận diện giọng nói", "error");
         }
     } catch (err) {
         showSnackbar("Có lỗi xảy ra trong quá trình nhận diện giọng nói", "error");
@@ -217,9 +318,9 @@ async function speechToText(blob) {
 async function submitBookClinicForm(e) {
     e.preventDefault();
     let labels = [
-        'HovaTen', 'GioiTinh', 'NgaySinhStr', 'SoDienThoai', 'Cccd', 'NgheNghiep', 'DanToc', 'LyDoKham', 'QuocTich']
+        'HovaTen', 'GioiTinh', 'NgaySinhStr', 'SoDienThoai', 'Cccd', 'NgheNghiep', 'DanToc', 'LyDoKham', 'QuocTich', 'PhongKhamId']
     try {
-        const res = await fetch('http://localhost:5132/api/BookClinic/create', {
+        const res = await fetch(`http://${host}:5132/api/BookClinic/create`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -233,7 +334,8 @@ async function submitBookClinicForm(e) {
                 NgheNghiep: document.querySelector('input[name="NgheNghiep"]').value,
                 DanToc: document.querySelector('select[name="DanToc"]').value,
                 LyDoKham: document.querySelector('input[name="LyDoKham"]').value,
-                QuocTich: document.querySelector('select[name="QuocTich"]').value
+                QuocTich: document.querySelector('select[name="QuocTich"]').value,
+                PhongKhamId: parseInt(document.querySelector('select[name="PhongKhamId"]').value)
             })
         });
         let json = await res.json();
@@ -244,6 +346,12 @@ async function submitBookClinicForm(e) {
                     DisplayError(labels[i], errors);
                 }
             }
+            if (json.status === 500) {
+                showSnackbar(json.message, "error");
+            }
+        } else {
+            showSnackbar("Đặt lịch khám thành công", "success");
+            await getClinicList();
         }
     }
     catch (err) {

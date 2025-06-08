@@ -1,4 +1,5 @@
 ﻿
+using ClinicAppointmentServer.Validations;
 using System.ComponentModel.DataAnnotations;
 
 namespace ClinicAppointmentServer.DTO
@@ -26,9 +27,10 @@ namespace ClinicAppointmentServer.DTO
 		public string? DanToc{get;set;}
 		public int LichHenId{get;set;}
 		public int? BenhNhanId{get;set;}
+		[NotEqual(Num =0)]
 		public int? PhongKhamId{get;set;}
 		public DateOnly? Ngay{get;set;}
-		[Required(ErrorMessage = "Vui lòng nhập giờ khám")]
+		//[Required(ErrorMessage = "Vui lòng nhập giờ khám")]
 		public string? Gio{get;set;}
 		[Required(ErrorMessage = "Vui lòng nhập lý do khám")]
 		public string? LyDoKham{get;set;}

@@ -33,7 +33,7 @@
                 <button class="tab btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Danh sách BN</button>
             </div>
             <div class="mb-4">
-                <button class="fancy-button" data-bs-toggle="modal" data-bs-target="#callModal">Hỗ trợ đặt khám</button>
+                <button class="fancy-button" data-bs-toggle="modal" data-bs-target="#callModal" onclick="startCall(event)">Hỗ trợ đặt khám</button>
             </div>
         </div>
         <!-- Search Fields (Horizontal) with BHYT Checkbox -->
@@ -51,7 +51,6 @@
                     <input type="text" placeholder="Nhập họ và tên" class="border rounded p-1 w-full pl-8">
                     <span class="icon-placeholder"></span>
                 </div>
-                <span class="text-danger" id="HovaTen"></span>
             </div>
             <div class="flex-1">
                 <label class="block text-sm font-medium text-gray-700">Căn cước</label>
@@ -59,7 +58,6 @@
                     <input type="text" placeholder="Nhập số căn cước" class="border rounded p-1 w-full pl-8">
                     <span class="icon-placeholder"></span>
                 </div>
-                <span class="text-danger" id="Cccd"></span>
             </div>
             <div class="flex items-center">
                 <input type="checkbox" class="custom-checkbox mr-2">
@@ -158,13 +156,9 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Phòng khám</label>
-                    <select class="border rounded p-1 w-full">
-                        <option value="">Tất cả</option>
-                        <option value="p303">Phòng khám Răng Hàm Mặt - P303</option>
-                        <option value="p411b">Phòng khám NỘI 2 (HSTC) - P411B</option>
-                        <option value="p202">Phòng khám Da Liễu - P202</option>
+                    <select class="border rounded p-1 w-full" id="select-clinic-section" name="PhongKhamId">
                     </select>
-                    <span class="text-danger" id="Gio"></span>
+                    <span class="text-danger" id="PhongKhamId"></span>
                 </div>
             </div>
             <!-- Right Column -->
@@ -279,56 +273,7 @@
                         <th class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Tổng</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Phòng khám Răng Hàm Mặt - P303</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">1</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">1</td>
-                    </tr>
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Phòng khám NỘI 2 (HSTC) - P411B</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
-                    </tr>
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Phòng khám Bệnh 6</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
-                    </tr>
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Kho khám bệnh</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
-                    </tr>
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Phòng khám Da Liễu - P202</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
-                    </tr>
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Phòng khám Đông y - PHCN 1(CS1) - P409</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
-                    </tr>
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Phòng khám Ngoại - P403</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">0</td>
-                    </tr>
+                <tbody class="bg-white divide-y divide-gray-200" id="clinic-info-table">
                 </tbody>
             </table>
         </div>

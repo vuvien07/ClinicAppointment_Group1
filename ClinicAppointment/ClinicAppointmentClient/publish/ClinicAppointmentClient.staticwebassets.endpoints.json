@@ -1,0 +1,498 @@
+{
+  "Version": 1,
+  "ManifestType": "Publish",
+  "Endpoints": [
+    {
+      "Route": "css/BookClinic.css",
+      "AssetFile": "css/BookClinic.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "6054"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"UzsTuoJ8OmB0lG3RJXSC8vTHMP8WI3cIM6YDW0OZPUY=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 25 May 2025 09:44:15 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-UzsTuoJ8OmB0lG3RJXSC8vTHMP8WI3cIM6YDW0OZPUY="
+        }
+      ]
+    },
+    {
+      "Route": "css/BookClinic.vlovxz496q.css",
+      "AssetFile": "css/BookClinic.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "6054"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"UzsTuoJ8OmB0lG3RJXSC8vTHMP8WI3cIM6YDW0OZPUY=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 25 May 2025 09:44:15 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "vlovxz496q"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-UzsTuoJ8OmB0lG3RJXSC8vTHMP8WI3cIM6YDW0OZPUY="
+        },
+        {
+          "Name": "label",
+          "Value": "css/BookClinic.css"
+        }
+      ]
+    },
+    {
+      "Route": "css/authentication/Login.b72arpwnpn.css",
+      "AssetFile": "css/authentication/Login.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "3716"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"WRe8Efy7xtvmofL1D5HYrRLoRhhU++4+gtkpHt46Z7s=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 24 May 2025 16:16:10 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "b72arpwnpn"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-WRe8Efy7xtvmofL1D5HYrRLoRhhU++4+gtkpHt46Z7s="
+        },
+        {
+          "Name": "label",
+          "Value": "css/authentication/Login.css"
+        }
+      ]
+    },
+    {
+      "Route": "css/authentication/Login.css",
+      "AssetFile": "css/authentication/Login.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "3716"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"WRe8Efy7xtvmofL1D5HYrRLoRhhU++4+gtkpHt46Z7s=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 24 May 2025 16:16:10 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-WRe8Efy7xtvmofL1D5HYrRLoRhhU++4+gtkpHt46Z7s="
+        }
+      ]
+    },
+    {
+      "Route": "css/common/Snackbar.css",
+      "AssetFile": "css/common/Snackbar.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "902"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"zJ8EEXvnwtZxwza3aSYdx0XXfvGnYvBmGcD+Z1vMdvM=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 24 May 2025 15:05:33 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-zJ8EEXvnwtZxwza3aSYdx0XXfvGnYvBmGcD+Z1vMdvM="
+        }
+      ]
+    },
+    {
+      "Route": "css/common/Snackbar.k2jtmdvu3o.css",
+      "AssetFile": "css/common/Snackbar.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "902"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"zJ8EEXvnwtZxwza3aSYdx0XXfvGnYvBmGcD+Z1vMdvM=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 24 May 2025 15:05:33 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "k2jtmdvu3o"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-zJ8EEXvnwtZxwza3aSYdx0XXfvGnYvBmGcD+Z1vMdvM="
+        },
+        {
+          "Name": "label",
+          "Value": "css/common/Snackbar.css"
+        }
+      ]
+    },
+    {
+      "Route": "js/BookClinic.js",
+      "AssetFile": "js/BookClinic.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "13073"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"VGI5Jw2X41FwquuleWeVI5L/nQ0jBkWTkSAKELQrOiE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 27 May 2025 01:45:17 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-VGI5Jw2X41FwquuleWeVI5L/nQ0jBkWTkSAKELQrOiE="
+        }
+      ]
+    },
+    {
+      "Route": "js/BookClinic.s6i1c1m34k.js",
+      "AssetFile": "js/BookClinic.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "13073"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"VGI5Jw2X41FwquuleWeVI5L/nQ0jBkWTkSAKELQrOiE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 27 May 2025 01:45:17 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "s6i1c1m34k"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-VGI5Jw2X41FwquuleWeVI5L/nQ0jBkWTkSAKELQrOiE="
+        },
+        {
+          "Name": "label",
+          "Value": "js/BookClinic.js"
+        }
+      ]
+    },
+    {
+      "Route": "js/authentication/Login.6lychen7m4.js",
+      "AssetFile": "js/authentication/Login.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1823"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"GhPmO0eI1V0UukVZQxR4nbrHzP/1Pxt57nb8h8WYPSo=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 26 May 2025 12:12:13 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "6lychen7m4"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-GhPmO0eI1V0UukVZQxR4nbrHzP/1Pxt57nb8h8WYPSo="
+        },
+        {
+          "Name": "label",
+          "Value": "js/authentication/Login.js"
+        }
+      ]
+    },
+    {
+      "Route": "js/authentication/Login.js",
+      "AssetFile": "js/authentication/Login.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1823"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"GhPmO0eI1V0UukVZQxR4nbrHzP/1Pxt57nb8h8WYPSo=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 26 May 2025 12:12:13 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-GhPmO0eI1V0UukVZQxR4nbrHzP/1Pxt57nb8h8WYPSo="
+        }
+      ]
+    },
+    {
+      "Route": "js/common/Snackbar.js",
+      "AssetFile": "js/common/Snackbar.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "966"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"Vb9eNCV10PwkJXkHsq+KWMFed61L6gjhfEHWtuD2C98=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 24 May 2025 15:13:09 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-Vb9eNCV10PwkJXkHsq+KWMFed61L6gjhfEHWtuD2C98="
+        }
+      ]
+    },
+    {
+      "Route": "js/common/Snackbar.pvyjwymprm.js",
+      "AssetFile": "js/common/Snackbar.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "966"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"Vb9eNCV10PwkJXkHsq+KWMFed61L6gjhfEHWtuD2C98=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 24 May 2025 15:13:09 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "pvyjwymprm"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-Vb9eNCV10PwkJXkHsq+KWMFed61L6gjhfEHWtuD2C98="
+        },
+        {
+          "Name": "label",
+          "Value": "js/common/Snackbar.js"
+        }
+      ]
+    }
+  ]
+}

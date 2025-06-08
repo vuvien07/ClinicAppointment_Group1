@@ -22,5 +22,21 @@ namespace ClinicAppointmentServer.Repositories.Implements
 		{
 			return await _appointmentContext.ThongTinPhongKhams.FirstOrDefaultAsync(t => t.PhongKhamId == id && t.Ngay == date);
 		}
+
+		public async Task<ThongTinPhongKham?> GetClinicInfo(DateOnly date, int clinicId)
+		{
+			return await _appointmentContext.ThongTinPhongKhams.FirstOrDefaultAsync(t => t.PhongKhamId == clinicId && t.Ngay == date);
+		}
+
+		public ClinicAppointmentContext GetContext()
+		{
+			return _appointmentContext;
+		}
+
+		public async Task UpdateClinicInfo(ThongTinPhongKham thongTinPhongKham)
+		{
+			_appointmentContext.ThongTinPhongKhams.Update(thongTinPhongKham);
+			await _appointmentContext.SaveChangesAsync();
+		}
 	}
 }
