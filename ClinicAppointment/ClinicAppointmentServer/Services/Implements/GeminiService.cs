@@ -20,21 +20,63 @@ namespace ClinicAppointmentServer.Services.Implements
 			var requestUrl = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={geminiAPIKey}";
 			var httpClient = new HttpClient();
 
-			var internalContext = new[]
-			{
-	new { text = "Ví dụ định dạng thông tin đầy đủ của người dùng:" },
-	new { text = "Tên: Viên Thanh Vuuu" },
-	new { text = "Ngày sinh: 01/01/1990" },
-	new { text = "Số điện thoại: 0901234567" },
-	new { text = "Địa chỉ: 123 Lê Lợi, Hà Nội" },
-	new { text = "Quốc tịch: Việt Nam" },
-	new { text = "Phòng khám: 123, Hà Nội" },
-	new { text = "Lí do khám: Viêm phòng mạch mạch" },
-	new { text = "Dân tộc: Tày" },
-	new { text = "Căn cước công dân: 020203001270" },
-	new { text = "Nghề nghiệp: Công chức" },
-	new { text = "Ghi chú: Nếu một trường bị thiếu hoặc không rõ ràng, hãy liệt kê tên các trường bị thiếu." }
-};
+			var internalContext = """
+Ví dụ định dạng đầu ra khi văn bản chỉ chứa một phần thông tin:
+
+Văn bản người dùng:
+"Tôi tên là Viên Thanh Vũ."
+
+Kết quả trích xuất:
+Dưới đây là thông tin bạn đã cung cấp:
+Tên: Viên Thanh Vũ
+
+Văn bản người dùng:
+"Tôi tên là Viên Thanh Vũ, sinh ngày 01/01/1990 và làm nghề công chức."
+
+Kết quả trích xuất:
+Dưới đây là thông tin bạn đã cung cấp:
+Tên: Viên Thanh Vũ
+Ngày sinh: 01/01/1990
+Nghề nghiệp: Công chức
+
+Ví dụ định dạng đầu ra khi văn bản không cung cấp thông tin nào:
+Không có thông tin nào được cung cấp , vui lồng trích xuất thống thái ngôn ngữ trên văn bản.
+""";
+
+			var userPrompt = $@"""
+Trích xuất thông tin người dùng từ văn bản sau:
+
+{propmt}
+
+Yêu cầu:
+- Chỉ sử dụng đúng nội dung trong văn bản để trích xuất thông tin.
+- Nếu trong văn bản chỉ có một phần thông tin, chỉ hiển thị phần đó theo đúng định dạng dưới đây.
+- Không thêm hoặc suy diễn thông tin không có trong văn bản.
+- Kết quả định dạng như sau:
+
+Dưới đây là thông tin bạn đã cung cấp:
+[Tên:]
+[Ngày sinh:]
+[Số điện thoại:]
+[Địa chỉ:]
+[Quốc tịch:]
+[Phòng khám:]
+[Lí do khám:]
+[Dân tộc:]
+[Căn cước công dân:]
+[Nghề nghiệp:]
+
+(Lưu ý: Chỉ hiển thị các dòng có thông tin tương ứng.)
+
+Nếu tất cả các trường đều đã có trong văn bản, hãy trả lời:
+Thông tin đã được nhập đầy đủ.
+
+Nếu trường hợp người dùng không cung cấp thông tin nào, hãy trả lời: Không có thông tin nào được cung cấp.
+Lưu ý: các thông tin như ngày sinh nên chuyển về đúng định dạng dd/mm/yyyy, số điện thoại và căn cước nên được chuyển đổi về số
+
+Nếu thiếu trường nào, hãy liệt kê trường bị thiếu và đề xuất giá trị nếu có thể.
+""";
+
 
 			var requestData = new
 			{
@@ -42,28 +84,10 @@ namespace ClinicAppointmentServer.Services.Implements
 				{
 		new
 		{
-			parts = internalContext
-				.Select(example => new { text = example.text })
-				.Append(new
-				{
-					text = $"Trích xuất thông tin người dùng từ văn bản sau:\n{propmt}\n\n" +
-						   "Yêu cầu định dạng:\n" +
-						   "- Tên:\n" +
-						   "- Ngày sinh:\n" +
-						   "- Số điện thoại:\n" +
-						   "- Địa chỉ:\n" +
-						   "- Quốc tịch:\n" +
-						   "- Phòng khám:\n" +
-						   "- Lí do khám:\n" +
-						   "- Dân tộc:\n" +
-						   "- Căn cước công dân:\n" +
-						   "- Nghề nghiệp:\n\n" +
-						   "Chỉ sử dụng văn bản này để trích xuất thông tin. " +
-						   "Chỉ hiển thị thông tin được cung cấp trong văn bản không kèm chú thích, nếu không có thì không hiển thị" +
-						   "Nếu thông tin đầy đủ, hãy trả lời: \"Thông tin đã được nhập đầy đủ.\" " +
-						   "Nếu thiếu, hãy liệt kê các trường bị thiếu và đề xuất giá trị nếu có thể."
-				})
-				.ToArray()
+			  parts = new[]
+			{
+				new { text = internalContext + userPrompt }
+			}
 		}
 	}
 			};

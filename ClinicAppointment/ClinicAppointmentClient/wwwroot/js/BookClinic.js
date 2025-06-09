@@ -20,27 +20,62 @@ async function startCall(e) {
         const text = document.createElement('p');
         text.className = 'message-text color-white';
         div.appendChild(icon);
-        let textt = 'Xin chào, chúng tôi là chuyên viên hỗ trợ bạn trong việc đặt lịch khám. Bạn có thể cung cấp cho hệ thống chúng tôi các thông tin cơ bản theo form?'
+        let textt = 'Xin chào, chúng tôi là chuyên viên hỗ trợ bạn trong việc đặt lịch khám. Bạn có thể cung cấp cho hệ thống chúng tôi các thông tin cơ bản theo biểu mẫu?';
+
         let formData = new FormData();
         formData.append("text", textt);
+
         const res = await fetch(`http://localhost:8001/tts`, {
             method: "POST",
             body: formData
         });
+
         if (res.ok) {
-            text.textContent = textt;
-            div.appendChild(text);
-            document.querySelector('.chat-container').appendChild(div);
             const blob = await res.blob();
             const audioUrl = URL.createObjectURL(blob);
             const audio = new Audio(audioUrl);
-            audio.playbackRate = 1.3;
-            audio.play();
+            audio.playbackRate = 1.2;
+            loadTextWithAudioPlay(audio, textt);
 
         }
     } catch (error) {
         showSnackbar(error.message, "error");
     }
+}
+
+function loadTextWithAudioPlay(audio, textt) {
+    const text = document.createElement('p');
+    text.className = 'message-text color-white';
+    text.textContent = ""; // Bắt đầu rỗng
+
+    const div = document.createElement('div');
+    div.className = 'bot-message d-flex';
+    const icon = document.createElement('i');
+    icon.className = 'bi bi-robot mt-2 me-2 bot-icon';
+
+    div.appendChild(icon);
+    div.appendChild(text);
+    document.querySelector('.chat-container').appendChild(div);
+
+    audio.addEventListener('loadedmetadata', () => {
+        const words = textt.split(" ");
+        const totalTime = audio.duration / audio.playbackRate; // tính lại theo tốc độ thực
+        const wordInterval = (totalTime / words.length) * 1000;
+
+        // Bắt đầu phát
+        audio.play();
+
+        // Hiển thị từ dần dần
+        let currentWord = 0;
+        const interval = setInterval(() => {
+            if (currentWord >= words.length) {
+                clearInterval(interval);
+                return;
+            }
+            text.textContent += (currentWord > 0 ? " " : "") + words[currentWord];
+            currentWord++;
+        }, wordInterval);
+    });
 }
 
 async function getClinicList() {
@@ -64,6 +99,7 @@ async function getClinicList() {
 
 async function textToSpeech(text) {
     try {
+        let initialtext = text;
         text = normalizeText(text);
         const formData = new FormData();
         formData.append("text", text);
@@ -76,7 +112,7 @@ async function textToSpeech(text) {
             const audioUrl = URL.createObjectURL(blob);
             const audio = new Audio(audioUrl);
             audio.playbackRate = 1.2;
-            audio.play();
+            loadTextWithAudioPlay(audio, initialtext);
         }
     } catch (error) {
         showSnackbar(error.message, "error");
@@ -129,6 +165,7 @@ async function sendMessageAndReceiveAnswer() {
 }
 
 async function answerUserPrompt(input) {
+    const inputLabel = ['HovaTen', 'GioiTinh', 'NgaySinhStr', 'SoDienThoai', 'Cccd', 'NgheNghiep', 'DanToc', 'LyDoKham', 'QuocTich', 'PhongKhamId'];
     let prompt = input.value;
     input.value = '';
     const div = document.createElement('div');
@@ -151,10 +188,9 @@ async function answerUserPrompt(input) {
             body: JSON.stringify({ Prompt: prompt }),
         });
         if (res.ok) {
+            document.querySelector('.chat-container').removeChild(div);
             const json = await res.json();
             if (json.result) {
-                await textToSpeech(json.result);
-                text.textContent = json.result;
                 const parts = json.result?.split("\n");
 
                 if (Array.isArray(parts)) {
@@ -252,117 +288,159 @@ async function answerUserPrompt(input) {
                         // Bạn có thể bổ sung thêm các trường khác tương tự ở đây nếu cần.
                     });
                 }
-
+                let message = json.result?.trim();
+                let aa = checkAnyNullOrEmptyInput();
+                if (!aa.check) {
+                    message += aa.text + '\n' + '. Bạn có thể cung cấp cho hệ thống chúng tôi các thông tin còn thiếu theo biểu mẫu?';
+                }
+                await textToSpeech(message);
             }
         }
     } catch (err) {
         text.textContent = 'Cos loi xay ra :' + err;
     }
 }
-let audioStream;
-let recorder;
-let is_recording = false;
 
-async function startRecording() {
-    audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    const input = audioContext.createMediaStreamSource(audioStream);
-    recorder = new Recorder(input, { numChannels: 1 });
 
-    recorder.record();
-    console.log("🔴 Đang ghi âm...");
-}
-
-async function stopRecording() {
-    recorder.stop();
-
-    recorder.exportWAV(async (blob) => {
-        await speechToText(blob);
+function checkAnyNullOrEmptyInput() {
+    let check = true;
+    let text = '\nCác thông tin còn thiếu: \n';
+    const inputs = document.querySelectorAll('input');
+    const selects = document.querySelectorAll('select');
+    inputs.forEach(input => {
+        if (input.value.trim() === '' || !input.value) {
+            if (input.dataset.label) {
+                text += `${input.dataset.label}\n`;
+            }
+            check = false;
+        }
     });
 
-    audioStream.getTracks().forEach(track => track.stop());
-    recorder = null;
-}
-async function recordingAudio() {
-    let icon = document.querySelector(".recordAudio");
-    if (is_recording) {
-        icon.style.color = "white";
-        await stopRecording();
+    selects.forEach(select => {
+        if (select.value.trim() === '' || !select.value) {
+            if (select.dataset.label) {
+                text += `${select.dataset.label}\n`;
+            }
+            check = false;
+        }
+    });
+        return {
+            check,
+            text
+        }
     }
-    if (!is_recording) {
-        icon.style.color = "red";
-        await startRecording();
-    }
-    is_recording = !is_recording
-}
+let audioStream;
+    let recorder;
+    let is_recording = false;
 
-async function speechToText(blob) {
-    try {
-        const formData = new FormData();
-        formData.append("file", blob, "recording.wav");
-        const res = await fetch(`http://${host}:8080/speech-to-text`, {
-            method: "POST",
-            body: formData
+    async function startRecording() {
+        audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const input = audioContext.createMediaStreamSource(audioStream);
+        recorder = new Recorder(input, { numChannels: 1 });
+
+        recorder.record();
+        console.log("🔴 Đang ghi âm...");
+    }
+
+    async function stopRecording() {
+        recorder.stop();
+
+        recorder.exportWAV(async (blob) => {
+            await speechToText(blob);
         });
-        if (res.ok) {
-            const json = await res.json();
-            document.querySelector('input[name="userPrompt"]').value = json.transcription;
-        } else {
+
+        audioStream.getTracks().forEach(track => track.stop());
+        recorder = null;
+    }
+    async function recordingAudio() {
+        let icon = document.querySelector(".recordAudio");
+        if (is_recording) {
+            icon.style.color = "white";
+            await stopRecording();
+        }
+        if (!is_recording) {
+            icon.style.color = "red";
+            await startRecording();
+        }
+        is_recording = !is_recording
+    }
+
+    async function speechToText(blob) {
+        try {
+            const formData = new FormData();
+            formData.append("file", blob, "recording.wav");
+            const res = await fetch(`http://${host}:8080/speech-to-text`, {
+                method: "POST",
+                body: formData
+            });
+            if (res.ok) {
+                const json = await res.json();
+                document.querySelector('input[name="userPrompt"]').value = json.transcription;
+            } else {
+                showSnackbar("Có lỗi xảy ra trong quá trình nhận diện giọng nói", "error");
+            }
+        } catch (err) {
             showSnackbar("Có lỗi xảy ra trong quá trình nhận diện giọng nói", "error");
         }
-    } catch (err) {
-        showSnackbar("Có lỗi xảy ra trong quá trình nhận diện giọng nói", "error");
     }
-}
 
-async function submitBookClinicForm(e) {
-    e.preventDefault();
-    let labels = [
-        'HovaTen', 'GioiTinh', 'NgaySinhStr', 'SoDienThoai', 'Cccd', 'NgheNghiep', 'DanToc', 'LyDoKham', 'QuocTich', 'PhongKhamId']
-    try {
-        const res = await fetch(`http://${host}:5132/api/BookClinic/create`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                HovaTen: document.querySelector('input[name="HovaTen"]').value,
-                GioiTinh: document.querySelector('select[name="GioiTinh"]').value,
-                NgaySinhStr: document.querySelector('input[name="NgaySinhStr"]').value,
-                SoDienThoai: document.querySelector('input[name="SoDienThoai"]').value,
-                Cccd: document.querySelector('input[name="Cccd"]').value,
-                NgheNghiep: document.querySelector('input[name="NgheNghiep"]').value,
-                DanToc: document.querySelector('select[name="DanToc"]').value,
-                LyDoKham: document.querySelector('input[name="LyDoKham"]').value,
-                QuocTich: document.querySelector('select[name="QuocTich"]').value,
-                PhongKhamId: parseInt(document.querySelector('select[name="PhongKhamId"]').value)
-            })
-        });
-        let json = await res.json();
-        if (!res.ok) {
-            if (json.errors) {
-                let errors = json.errors;
-                for (let i = 0; i < labels.length; i++) {
-                    DisplayError(labels[i], errors);
+    async function submitBookClinicForm(e) {
+        e.preventDefault();
+        let labels = [
+            'HovaTen', 'GioiTinh', 'NgaySinhStr', 'SoDienThoai', 'Cccd', 'NgheNghiep', 'DanToc', 'LyDoKham', 'QuocTich', 'PhongKhamId']
+        try {
+            const res = await fetch(`http://${host}:5132/api/BookClinic/create`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    HovaTen: document.querySelector('input[name="HovaTen"]').value,
+                    GioiTinh: document.querySelector('select[name="GioiTinh"]').value,
+                    NgaySinhStr: document.querySelector('input[name="NgaySinhStr"]').value,
+                    SoDienThoai: document.querySelector('input[name="SoDienThoai"]').value,
+                    Cccd: document.querySelector('input[name="Cccd"]').value,
+                    NgheNghiep: document.querySelector('input[name="NgheNghiep"]').value,
+                    DanToc: document.querySelector('select[name="DanToc"]').value,
+                    LyDoKham: document.querySelector('input[name="LyDoKham"]').value,
+                    QuocTich: document.querySelector('select[name="QuocTich"]').value,
+                    PhongKhamId: parseInt(document.querySelector('select[name="PhongKhamId"]').value)
+                })
+            });
+            let json = await res.json();
+            if (!res.ok) {
+                if (json.errors) {
+                    let errors = json.errors;
+                    for (let i = 0; i < labels.length; i++) {
+                        DisplayError(labels[i], errors);
+                    }
                 }
+                if (json.status === 500) {
+                    showSnackbar(json.message, "error");
+                }
+            } else {
+                showSnackbar("Đặt lịch khám thành công", "success");
+                await getClinicList();
             }
-            if (json.status === 500) {
-                showSnackbar(json.message, "error");
-            }
-        } else {
-            showSnackbar("Đặt lịch khám thành công", "success");
-            await getClinicList();
+        }
+        catch (err) {
+            showSnackbar("Có lỗi xảy ra!", "error")
         }
     }
-    catch (err) {
-        showSnackbar("Có lỗi xảy ra!", "error")
-    }
-}
 
-function DisplayError(id, errors) {
-    if (!errors || !errors[id]) {
-        document.getElementById(id).innerText = '';
-        return;
-    };
-    document.getElementById(id).innerText = errors[id];
+    function DisplayError(id, errors) {
+        if (!errors || !errors[id]) {
+            document.getElementById(id).innerText = '';
+            return;
+        };
+        document.getElementById(id).innerText = errors[id];
+    }
+
+function clearMessage(e) {
+    e.preventDefault();
+    const container = document.querySelector('.chat-container');
+    if (container) {
+        container.innerHTML = ''; // Xóa toàn bộ nội dung
+    }
 }

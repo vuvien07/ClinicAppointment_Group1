@@ -85,7 +85,7 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Giới tính</label>
-                    <select class="border rounded p-1 w-full" name="GioiTinh">
+                    <select class="border rounded p-1 w-full" name="GioiTinh" data-label="Giới tính">
                         <option value="">Tất cả</option>
                         <option value="Nam">Nam</option>
                         <option value="Nữ">Nữ</option>
@@ -122,19 +122,19 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Họ và tên</label>
                     <div class="relative">
-                        <input type="text" name="HovaTen" placeholder="Nhập họ và tên" class="border rounded p-1 w-full pl-8">
+                        <input type="text" name="HovaTen" placeholder="Nhập họ và tên" data-label="Họ và tên" class="border rounded p-1 w-full pl-8">
                         <span class="icon-placeholder"></span>
                     </div>
                     <span class="text-danger" id="HovaTen"></span>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Ngày sinh</label>
-                    <input type="date" class="border rounded p-1 w-full" name="NgaySinhStr">
+                    <input type="date" class="border rounded p-1 w-full" name="NgaySinhStr" data-label="Ngày sinh">
                     <span class="text-danger" id="NgaySinhStr"></span>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Quốc tịch</label>
-                    <select class="border rounded p-1 w-full" name="QuocTich">
+                    <select class="border rounded p-1 w-full" name="QuocTich" data-label="Quốc tịch">
                         <option value="">Tất cả</option>
                         <option value="Việt Nam">Việt Nam</option>
                         <option value="Khác">Khác</option>
@@ -166,7 +166,7 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Điện thoại</label>
                     <div class="relative">
-                        <input type="text" name="SoDienThoai" placeholder="Nhập số điện thoại" class="border rounded p-1 w-full pl-8">
+                        <input type="text" name="SoDienThoai" placeholder="Nhập số điện thoại" data-label="Số điện thoại" class="border rounded p-1 w-full pl-8">
                         <span class="icon-placeholder"></span>
                     </div>
                     <span class="text-danger" id="SoDienThoai"></span>
@@ -174,14 +174,14 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Căn cước</label>
                     <div class="relative">
-                        <input type="text" name="Cccd" placeholder="Nhập số căn cước" class="border rounded p-1 w-full pl-8">
+                        <input type="text" name="Cccd" placeholder="Nhập số căn cước" data-label="Căn cước" class="border rounded p-1 w-full pl-8">
                         <span class="icon-placeholder"></span>
                     </div>
                     <span class="text-danger" id="Cccd"></span>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Dân tộc</label>
-                    <select class="border rounded p-1 w-full" name="DanToc">
+                    <select class="border rounded p-1 w-full" name="DanToc" data-label="Dân tộc">
                         <option value="">Tất cả</option>
                         <option value="Kinh">Kinh</option>
                         <option value="Khác">Khác</option>
@@ -194,7 +194,7 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Nghề nghiệp</label>
-                    <input type="text" name="NgheNghiep" placeholder="Nhập nghe nghiệp" class="border rounded p-1 w-full">
+                    <input type="text" name="NgheNghiep" placeholder="Nhập nghe nghiệp" data-label="Nghề nghiệp" class="border rounded p-1 w-full">
                     <span class="text-danger" id="NgheNghiep"></span>
                 </div>
                 <div>
@@ -308,7 +308,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Tiêu đề Modal</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng" onclick="clearMessage(event)"></button>
                 </div>
                 <div class="modal-body aiHelperContainer">
                     <header class="app-header">
