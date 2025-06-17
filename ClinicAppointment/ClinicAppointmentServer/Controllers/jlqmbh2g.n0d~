@@ -1,7 +1,6 @@
 ﻿using ClinicAppointmentServer.DTO;
 using ClinicAppointmentServer.Entiies;
 using ClinicAppointmentServer.Services;
-using ClinicAppointmentServer.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,8 +29,8 @@ namespace ClinicAppointmentServer.Controllers
 			}
 			Account? account = await _loginService.findByUsernameAndPassword(loginDTO.Username, loginDTO.Password);
 			if (account == null) return BadRequest(new { message = "Username or password is incorrect" });
-			string token = _jwtService.CreateJwtToken(Mapper.Map<Account, AccountDTO>(account)?? new AccountDTO());
-			return Ok(new { message = "Login successfully", token = token });
+			A
+			return Ok(new { message = "Login successfully" });
 		}
 	}
 }

@@ -1,4 +1,5 @@
 ﻿const host = window.location.hostname;
+let isStartCallAI = false;
 window.onload = async () => {
     var params = new URLSearchParams(window.location.search);
     if (params.has('isLoggingIn')) {
@@ -13,6 +14,7 @@ window.onload = async () => {
 async function startCall(e) {
     e.preventDefault();
     try {
+        if(isStartCallAI) return;
         const div = document.createElement('div');
         div.className = 'bot-message d-flex';
         const icon = document.createElement('i');
@@ -20,7 +22,7 @@ async function startCall(e) {
         const text = document.createElement('p');
         text.className = 'message-text color-white';
         div.appendChild(icon);
-        let textt = 'Xin chào, chúng tôi là chuyên viên hỗ trợ bạn trong việc đặt lịch khám. Bạn có thể cung cấp cho hệ thống chúng tôi các thông tin cơ bản theo biểu mẫu?';
+        let textt = 'Xin chào, chúng tôi là chuyên viên hỗ trợ bạn trong việc đặt lịch khám. Đầu tiên thì bạn có thể cung cấp cho chúng tôi về tên của bạn được không?';
 
         let formData = new FormData();
         formData.append("text", textt);
@@ -38,6 +40,7 @@ async function startCall(e) {
             loadTextWithAudioPlay(audio, textt);
 
         }
+        isStartCallAI = true;
     } catch (error) {
         showSnackbar(error.message, "error");
     }
@@ -184,6 +187,7 @@ async function answerUserPrompt(input) {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "token": localStorage.getItem("token")
             },
             body: JSON.stringify({ Prompt: prompt }),
         });
@@ -288,12 +292,7 @@ async function answerUserPrompt(input) {
                         // Bạn có thể bổ sung thêm các trường khác tương tự ở đây nếu cần.
                     });
                 }
-                let message = json.result?.trim();
-                let aa = checkAnyNullOrEmptyInput();
-                if (!aa.check) {
-                    message += aa.text + '\n' + '. Bạn có thể cung cấp cho hệ thống chúng tôi các thông tin còn thiếu theo biểu mẫu?';
-                }
-                await textToSpeech(message);
+                await textToSpeech(json.result);
             }
         }
     } catch (err) {

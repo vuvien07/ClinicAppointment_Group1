@@ -5,6 +5,8 @@ using ClinicAppointmentServer.Entiies;
 using ClinicAppointmentServer.Services;
 using ClinicAppointmentServer.Services.Implements;
 using ClinicAppointmentServer.Middlewares;
+using StackExchange.Redis;
+using ClinicAppointmentServer.Proxy;
 
 namespace ClinicAppointmentServer
 {
@@ -14,6 +16,11 @@ namespace ClinicAppointmentServer
 		{
 			var builder = WebApplication.CreateBuilder(args);
 			ConfigureServices(builder.Services);
+			builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+			{
+				var configuration = builder.Configuration.GetSection("Redis")["ConnectionString"];
+				return ConnectionMultiplexer.Connect(configuration);
+			});
 			builder.Services.AddAuthorization();
 			var app = builder.Build();
 			app.UseMiddleware<ExceptionHandlerMiddleware>();
@@ -46,6 +53,7 @@ namespace ClinicAppointmentServer
 			});
 			services.AddScoped(typeof(ClinicAppointmentContext));
 			services.AddTransient<ILoginService, LoginService>();
+			services.AddScoped<IConversationService, ConversationService>();
 			services.AddTransient<IGeminiService, GeminiService>();
 			services.AddTransient<IClinicInfoService, ClinicInfoService>();
 			services.AddTransient<IClinicRepository, ClinicRepository>();
@@ -54,6 +62,7 @@ namespace ClinicAppointmentServer
 			services.AddTransient<IBookClinicService, BookClinicService>();
 			services.AddTransient<IPlanScheduleRepository, PlanScheduleRepository>();
 			services.AddTransient<IPatientRepository, PatientRepository>();
+			services.AddTransient<IJwtService, JwtService>();
 		}
 	}
 }

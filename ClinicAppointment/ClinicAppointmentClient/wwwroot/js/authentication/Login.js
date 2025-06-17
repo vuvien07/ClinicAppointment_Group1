@@ -42,6 +42,7 @@ async function LoginToSystem(e) {
                 showSnackbar(json.message, "error");
             }
         } else {
+            localStorage.setItem("token", json.token);
             window.location.href = "/bookclinic?isLoggingIn=true";
         }
     } catch (error) {
