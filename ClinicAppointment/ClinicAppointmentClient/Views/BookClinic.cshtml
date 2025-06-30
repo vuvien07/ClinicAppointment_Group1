@@ -113,13 +113,31 @@
         <div class="bc-form-row">
             <!-- Cột 1 -->
             <div class="bc-form-col">
-                <div class="bc-form-group"><label>Đối tượng</label><select><option>Yêu cầu</option></select></div>
+                <div class="bc-form-group">
+                    <label>Đối tượng</label><select id="doiTuong">
+                        <option value="">Yêu cầu</option>
+                        <option value="BHYT">Bảo hiểm y tế</option>
+                        <option value="DV">Dịch vụ</option>
+                        <option value="KSK">Khám sức khỏe</option>
+                    </select>
+                </div>
                 <div class="bc-form-group"><label>Mã BN</label><input type="text"></div>
                 <div class="bc-form-group"><label>Giới tính</label><select><option>Nam</option><option>Nữ</option></select></div>
                 <div class="bc-form-group"><label>SN/thôn/phố</label><input type="text"></div>
                 <div class="bc-form-group"><label>H/Q</label><input type="text"></div>
-                <div class="bc-form-group"><label>ĐK khám</label><select><option>Khám bệnh</option></select></div>
-                <div class="bc-form-group"><label>Dịch vụ</label><select><option>DVCK - Công khám</option></select></div>
+                <div class="bc-form-group">
+                    <label>ĐK khám</label><select id="dkKham">
+                        <option value="khamBenh">Khám bệnh</option>
+                        <option value="khamChuyenKhoa">Khám chuyên khoa</option>
+                    </select>
+                </div>
+                <div class="bc-form-group">
+                    <label>Dịch vụ</label><select id="dichVu">
+                        <option value="DVCK">DVCK - Công khám</option>
+                        <option value="XN">Xét nghiệm</option>
+                        <option value="CDHA">Chẩn đoán hình ảnh</option>
+                    </select>
+                </div>
             </div>
             <!-- Cột 2 -->
             <div class="bc-form-col">
@@ -134,7 +152,17 @@
                 <div class="bc-form-group"><label>TT/HQ/XP</label><input type="text"></div>
                 <div class="bc-form-group"><label>X/P</label><input type="text"></div>
                 <div class="bc-form-group"><label>Lúc</label><input type="text" value="23:02 23/05/2025"></div>
-                <div class="bc-form-group"><label>Phòng khám <span class="text-danger">*</span></label><select><option>Chọn...</option></select></div>
+                <div class="bc-form-group">
+                    <label>Phòng khám <span class="text-danger">*</span></label><select id="phongKham">
+                        <option value="">Chọn...</option>
+                        <option value="pkRangHamMat">Phòng khám Răng Hàm Mặt - P303</option>
+                        <option value="pkNoi2">Phòng khám NỘI 2 (HSTC) - P411B</option>
+                        <option value="pkDaLieu">Phòng khám Da Liễu - P202</option>
+                        <option value="pkDongYPHCN">Phòng khám Đông y - PHCN 1(CS1) - P409</option>
+                        <option value="pkNgoai">Phòng khám Ngoại - P403</option>
+                        <option value="pkTongHop">Phòng khám tổng hợp</option>
+                    </select>
+                </div>
             </div>
             <!-- Cột 3 -->
             <div class="bc-form-col">
