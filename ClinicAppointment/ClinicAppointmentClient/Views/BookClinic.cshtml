@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Medical Dashboard</title>
     <link href="~/css/BookClinic.css" rel="stylesheet" asp-append-version="true" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+
 </head>
 <body class="bg-gray-100 font-sans">
     <!-- Header -->
@@ -17,10 +21,25 @@
                 <span class="text-blue-600 font-semibold">CLINIC 365</span>
             </div>
         </div>
-        <div class="flex items-center space-x-1">
-            <span class="text-gray-600" id="username-display">ADMIN</span>
-            <div class="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white text-xs">0</div>
-        </div>
+        <div class="dropdown">
+  <button class="btn btn-light d-flex align-items-center gap-2" type="button" id="adminDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+    <i class="bi bi-person-circle fs-4"></i>
+    <span class="fw-semibold">Admin</span>
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+    <li>
+      <a class="dropdown-item" href="#">
+        <i class="bi bi-gear me-2"></i> Cài đặt
+      </a>
+    </li>
+    <li>
+      <a class="dropdown-item" href="#">
+        <i class="bi bi-box-arrow-right me-2"></i> Logout
+      </a>
+    </li>
+  </ul>
+</div>
+
     </header>
 
     <!-- Subheader Section -->
@@ -30,235 +49,182 @@
         </div>
         <div class="d-flex justify-content-between">
             <div class="mb-4">
-                <button class="tab btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Danh sách BN</button>
+               <button class="tab btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"> <i class="bi bi-people me-1"></i> Danh sách BN</button>
             </div>
             <div class="mb-4">
                 <button class="fancy-button" data-bs-toggle="modal" data-bs-target="#callModal" onclick="startCall(event)">Hỗ trợ đặt khám</button>
             </div>
         </div>
-        <!-- Search Fields (Horizontal) with BHYT Checkbox -->
-        <div class="flex space-x-4 mb-4 items-end">
-            <div class="flex-1">
-                <label class="block text-sm font-medium text-gray-700">Mã BN</label>
-                <div class="relative">
-                    <input type="text" placeholder="Nhập mã bệnh nhân" class="border rounded p-1 w-full pl-8">
-                    <span class="icon-placeholder"></span>
+        <!-- Search
+        -->
+        <div class="bc-search-row">
+            <div class="bc-search-group">
+                <div class="bc-search-pair">
+                    <label for="searchDienThoai">Điện thoại</label>
+                    <div class="bc-input-icon-group">
+                        <input type="text" id="searchDienThoai" class="bc-search-input-mini" placeholder="">
+                        <span class="bc-icon-search">
+                            <svg width="14" height="14" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <circle cx="11" cy="11" r="8" />
+                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+                <div class="bc-search-pair">
+                    <label for="searchHoTen">Họ và tên</label>
+                    <div class="bc-input-icon-group">
+                        <input type="text" id="searchHoTen" class="bc-search-input-mini" placeholder="">
+                        <span class="bc-icon-search">
+                            <svg width="14" height="14" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <circle cx="11" cy="11" r="8" />
+                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+                <div class="bc-search-pair">
+                    <label for="searchCanCuoc">Căn cước</label>
+                    <div class="bc-input-icon-group">
+                        <input type="text" id="searchCanCuoc" class="bc-search-input-mini" placeholder="">
+                        <span class="bc-icon-search">
+                            <svg width="14" height="14" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <circle cx="11" cy="11" r="8" />
+                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                            </svg>
+                        </span>
+                    </div>
                 </div>
             </div>
-            <div class="flex-1">
-                <label class="block text-sm font-medium text-gray-700">Họ và tên</label>
-                <div class="relative">
-                    <input type="text" placeholder="Nhập họ và tên" class="border rounded p-1 w-full pl-8">
-                    <span class="icon-placeholder"></span>
-                </div>
-            </div>
-            <div class="flex-1">
-                <label class="block text-sm font-medium text-gray-700">Căn cước</label>
-                <div class="relative">
-                    <input type="text" placeholder="Nhập số căn cước" class="border rounded p-1 w-full pl-8">
-                    <span class="icon-placeholder"></span>
-                </div>
-            </div>
-            <div class="flex items-center">
-                <input type="checkbox" class="custom-checkbox mr-2">
-                <label class="text-sm font-medium text-gray-700">Kiểm tra thẻ BHYT</label>
+            <div class="bc-search-actions">
+                <label class="bc-priority-label align-items-center d-flex mb-0">
+                    <input type="checkbox" class="custom-checkbox me-1" />
+                    Ưu tiên
+                </label>
+                <button class="bc-btn-check-bhyt">
+                    <!-- SVG icon thẻ BHYT -->
+                    Kiểm tra thẻ BHYT
+                </button>
             </div>
         </div>
+
+
         <!-- Filter Fields (Four Columns) -->
-        <div class="flex space-x-8 mb-4">
-            <!-- Left Column -->
-            <div class="space-y-4 flex-1 max-w-md">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Đối tượng</label>
-                    <select class="border rounded p-1 w-full">
-                        <option value="">Tất cả</option>
-                        <option value="yc">Yêu cầu</option>
-                        <option value="bhyt">BHYT</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Mã bệnh nhân</label>
-                    <div class="relative">
-                        <input type="text" placeholder="Nhập mã bệnh nhân" class="border rounded p-1 w-full pl-8">
-                        <span class="icon-placeholder"></span>
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Giới tính</label>
-                    <select class="border rounded p-1 w-full" name="GioiTinh" data-label="Giới tính">
-                        <option value="">Tất cả</option>
-                        <option value="Nam">Nam</option>
-                        <option value="Nữ">Nữ</option>
-                    </select>
-                    <span class="text-danger" id="GioiTinh"></span>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">SN/Thôn/Phố</label>
-                    <input type="text" placeholder="Nhập thông tin" class="border rounded p-1 w-full">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">H/Q</label>
-                    <input type="text" placeholder="Nhập quận/huyện" class="border rounded p-1 w-full">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">ĐK khám</label>
-                    <select class="border rounded p-1 w-full">
-                        <option value="">Tất cả</option>
-                        <option value="luc">Lục</option>
-                        <option value="khac">Khác</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Dịch vụ</label>
-                    <select class="border rounded p-1 w-full">
-                        <option value="">Tất cả</option>
-                        <option value="dvck">DVCK - Công</option>
-                        <option value="khac">Khác</option>
-                    </select>
-                </div>
+        <div class="bc-form-row">
+            <!-- Cột 1 -->
+            <div class="bc-form-col">
+                <div class="bc-form-group"><label>Đối tượng</label><select><option>Yêu cầu</option></select></div>
+                <div class="bc-form-group"><label>Mã BN</label><input type="text"></div>
+                <div class="bc-form-group"><label>Giới tính</label><select><option>Nam</option><option>Nữ</option></select></div>
+                <div class="bc-form-group"><label>SN/thôn/phố</label><input type="text"></div>
+                <div class="bc-form-group"><label>H/Q</label><input type="text"></div>
+                <div class="bc-form-group"><label>ĐK khám</label><select><option>Khám bệnh</option></select></div>
+                <div class="bc-form-group"><label>Dịch vụ</label><select><option>DVCK - Công khám</option></select></div>
             </div>
-            <!-- Middle Column -->
-            <div class="space-y-4 flex-1 max-w-md">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Họ và tên</label>
-                    <div class="relative">
-                        <input type="text" name="HovaTen" placeholder="Nhập họ và tên" data-label="Họ và tên" class="border rounded p-1 w-full pl-8">
-                        <span class="icon-placeholder"></span>
-                    </div>
-                    <span class="text-danger" id="HovaTen"></span>
+            <!-- Cột 2 -->
+            <div class="bc-form-col">
+                <div class="bc-form-group"><label>Họ và tên <span class="text-danger">*</span></label><input type="text"></div>
+                <div class="bc-form-group">
+                    <label>Ngày sinh <span class="text-danger">*</span></label>
+                    <input type="text" class="bc-date-mini" maxlength="2" placeholder="DD">
+                    <input type="text" class="bc-date-mini" maxlength="2" placeholder="MM">
+                    <input type="text" class="bc-date-mini" maxlength="4" placeholder="YYYY">
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Ngày sinh</label>
-                    <input type="date" class="border rounded p-1 w-full" name="NgaySinhStr" data-label="Ngày sinh">
-                    <span class="text-danger" id="NgaySinhStr"></span>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Quốc tịch</label>
-                    <select class="border rounded p-1 w-full" name="QuocTich" data-label="Quốc tịch">
-                        <option value="">Tất cả</option>
-                        <option value="Việt Nam">Việt Nam</option>
-                        <option value="Khác">Khác</option>
-                    </select>
-                    <span class="text-danger" id="QuocTich"></span>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">TT/HQ/XP</label>
-                    <input type="text" placeholder="Nhập tỉnh/thành phố" class="border rounded p-1 w-full">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">X/P</label>
-                    <input type="text" placeholder="Nhập xã/phường" class="border rounded p-1 w-full">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Lúc</label>
-                    <input type="time" class="border rounded p-1 w-full" name="Gio">
-                    <span class="text-danger" id="Gio"></span>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Phòng khám</label>
-                    <select class="border rounded p-1 w-full" id="select-clinic-section" name="PhongKhamId">
-                    </select>
-                    <span class="text-danger" id="PhongKhamId"></span>
-                </div>
+                <div class="bc-form-group"><label>Quốc tịch</label><input type="text" value="Việt Nam"></div>
+                <div class="bc-form-group"><label>TT/HQ/XP</label><input type="text"></div>
+                <div class="bc-form-group"><label>X/P</label><input type="text"></div>
+                <div class="bc-form-group"><label>Lúc</label><input type="text" value="23:02 23/05/2025"></div>
+                <div class="bc-form-group"><label>Phòng khám <span class="text-danger">*</span></label><select><option>Chọn...</option></select></div>
             </div>
-            <!-- Right Column -->
-            <div class="space-y-4 flex-1 max-w-md">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Điện thoại</label>
-                    <div class="relative">
-                        <input type="text" name="SoDienThoai" placeholder="Nhập số điện thoại" data-label="Số điện thoại" class="border rounded p-1 w-full pl-8">
-                        <span class="icon-placeholder"></span>
-                    </div>
-                    <span class="text-danger" id="SoDienThoai"></span>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Căn cước</label>
-                    <div class="relative">
-                        <input type="text" name="Cccd" placeholder="Nhập số căn cước" data-label="Căn cước" class="border rounded p-1 w-full pl-8">
-                        <span class="icon-placeholder"></span>
-                    </div>
-                    <span class="text-danger" id="Cccd"></span>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Dân tộc</label>
-                    <select class="border rounded p-1 w-full" name="DanToc" data-label="Dân tộc">
-                        <option value="">Tất cả</option>
-                        <option value="Kinh">Kinh</option>
-                        <option value="Khác">Khác</option>
-                    </select>
-                    <span class="text-danger" id="DanToc"></span>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">T/TP</label>
-                    <input type="text" placeholder="Nhập tỉnh/thành phố" class="border rounded p-1 w-full">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Nghề nghiệp</label>
-                    <input type="text" name="NgheNghiep" placeholder="Nhập nghe nghiệp" data-label="Nghề nghiệp" class="border rounded p-1 w-full">
-                    <span class="text-danger" id="NgheNghiep"></span>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Lý do khám</label>
-                    <input type="text" name="LyDoKham" placeholder="Nhập lý do khám" class="border rounded p-1 w-full">
-                    <span class="text-danger" id="LyDoKham"></span>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Nguồn/Người giới thiệu</label>
-                    <select class="border rounded p-1 w-full">
-                        <option value="">Tất cả</option>
-                        <option value="self">Tự đến</option>
-                        <option value="referral">Người giới thiệu</option>
-                    </select>
-                </div>
+            <!-- Cột 3 -->
+            <div class="bc-form-col">
+                <div class="bc-form-group"><label>Điện thoại</label><input type="text"></div>
+                <div class="bc-form-group"><label>Căn cước</label><input type="text"></div>
+                <div class="bc-form-group"><label>Dân tộc</label><input type="text" value="Kinh"></div>
+                <div class="bc-form-group"><label>T/TP</label><input type="text"></div>
+                <div class="bc-form-group"><label>Nghề nghiệp</label><input type="text"></div>
+                <div class="bc-form-group"><label>Lý do khám</label><input type="text"></div>
+                <div class="bc-form-group"><label>Nguồn/Người giới thiệu</label><input type="text"></div>
             </div>
-            <!-- BHYT Column (without the checkbox) -->
-            <div class="space-y-4 flex-1 max-w-md">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Số BHYT</label>
-                    <input type="text" placeholder="" class="border rounded p-1 w-full">
+            
+            
+            <!-- Phần BHYT -->
+            <div class="bc-bhyt-info-section">
+                <div class="bc-bhyt-row">
+                    <label>Số BHYT</label>
+                    <input type="text" class="bc-bhyt-short">
+                    <input type="text" class="bc-bhyt-short">
+                    <input type="text" class="bc-bhyt-short">
+                    <input type="text" class="bc-bhyt-long">
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">KCB BD</label>
-                    <input type="text" placeholder="" class="border rounded p-1 w-full">
+                <div class="bc-bhyt-row">
+                    <label>KCB BD</label>
+                    <input type="text" class="bc-bhyt-long">
+                    <input type="text" class="bc-bhyt-long">
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Hạn thẻ</label>
-                    <input type="date" class="border rounded p-1 w-full">
+                <div class="bc-bhyt-row">
+                    <label>Hạn thẻ</label>
+                    <input type="text" class="bc-bhyt-short">
+                    <input type="text" class="bc-bhyt-short">
+                    <input type="text" class="bc-bhyt-short">
+                    <input type="text" class="bc-bhyt-short">
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Tuyển KCB</label>
-                    <select class="border rounded p-1 w-full">
-                        <option value="">Chọn...</option>
-                        <option value="kcb1">KCB 1</option>
-                        <option value="kcb2">KCB 2</option>
-                    </select>
+                <div class="bc-bhyt-row bc-bhyt-row-flex">
+                    <label>Tuyến KCB</label>
+                    <select class="bc-bhyt-tuyen"><option>Chọn...</option></select>
+                    <label class="bc-bhyt-muchuong-label">Mức hưởng</label>
+                    <input type="text" class="bc-bhyt-muchuong-input">
+                    <span class="bc-bhyt-percent">%</span>
                 </div>
-                <div class="flex space-x-2">
-                    <div class="flex-1">
-                        <label class="block text-sm font-medium text-gray-700">Mức hưởng</label>
-                        <input type="text" placeholder="" class="border rounded p-1 w-full">
-                    </div>
-                    <div class="w-16">
-                        <label class="block text-sm font-medium text-gray-700"> </label>
-                        <input type="text" placeholder="%" class="border rounded p-1 w-full text-center" readonly>
-                    </div>
+                <div class="bc-bhyt-row">
+                    <span class="bc-bhyt-chungnhan">Chứng nhận không cùng chi trả trong năm</span>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Ngày miễn cùng chi trả</label>
-                    <input type="date" class="border rounded p-1 w-full">
+                <div class="bc-bhyt-row">
+                    <label>Ngày miễn cùng chi trả</label>
+                    <input type="text" class="bc-bhyt-short">
+                    <input type="text" class="bc-bhyt-short">
+                    <input type="text" class="bc-bhyt-short">
+                    <input type="text" class="bc-bhyt-short">
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Ngày đóng đủ 5 năm liên tục</label>
-                    <input type="date" class="border rounded p-1 w-full">
+                <div class="bc-bhyt-row">
+                    <label>Ngày đóng đủ 5 năm liên tục</label>
+                    <input type="text" class="bc-bhyt-short">
+                    <input type="text" class="bc-bhyt-short">
+                    <input type="text" class="bc-bhyt-short">
+                    <input type="text" class="bc-bhyt-short">
                 </div>
+
             </div>
+
         </div>
+
         <!-- Action Buttons -->
-        <div class="flex justify-end space-x-4 mb-4">
-            <button class="action-button-new">Bệnh nhân mới (F1)</button>
-            <button class="action-button-save" onclick="submitBookClinicForm(event)">Lưu lại (F2)</button>
-        </div>
-    </div>
+        <div class="bc-action-row">
+    <button class="bc-btn bc-btn-outline">
+        <span class="bc-btn-icon">
+            <!-- SVG dấu cộng -->
+            <svg width="18" height="18" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="11" stroke="#2563eb" stroke-width="1.5" fill="none"/>
+                <line x1="12" y1="8" x2="12" y2="16"/>
+                <line x1="8" y1="12" x2="16" y2="12"/>
+            </svg>
+        </span>
+        Bệnh nhân mới (F1)
+    </button>
+    <button class="bc-btn bc-btn-solid">
+        <span class="bc-btn-icon">
+            <!-- SVG sổ lưu -->
+            <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                <rect x="4" y="4" width="16" height="16" rx="3" stroke="#fff" stroke-width="1.5" fill="none"/>
+                <path d="M8 4v16M16 4v16" stroke="#fff" stroke-width="1.5"/>
+                <rect x="9" y="9" width="6" height="6" rx="1" fill="#fff"/>
+            </svg>
+        </span>
+        Lưu lại (F2)
+    </button>
+</div>
+
+
 
     <!-- Clinic Info Tab Content -->
     <div id="clinic-info-tab" class="tab-content">

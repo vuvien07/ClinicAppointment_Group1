@@ -1,11 +1,15 @@
-﻿.custom-checkbox {
+﻿/* Checkbox Styles */
+.custom-checkbox {
     appearance: none;
     width: 16px;
     height: 16px;
-    border: 1px solid #ccc;
+    border: 1px solid #3b82f6;
     border-radius: 3px;
     position: relative;
     cursor: pointer;
+    background: #fff;
+    margin-right: 4px;
+    vertical-align: middle;
 }
 
     .custom-checkbox:checked {
@@ -22,15 +26,126 @@
             font-size: 12px;
         }
 
-.icon-placeholder::before {
-    content: '\1F50D'; /* Magnifying glass icon for search */
+/* Search Bar Styles */
+.bc-search-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    gap: 0; /* Không gap giữa 2 nhóm lớn */
+}
+
+.bc-search-group {
+    display: flex;
+    gap: 0; /* Không có khoảng cách giữa 3 ô search */
+}
+
+.bc-search-pair {
+    display: flex;
+    align-items: center;
+    gap: 4px; /* Khoảng cách nhỏ giữa label và input */
+    margin-bottom: 0;
+    margin-right: 8px; /* Khoảng cách nhỏ giữa các cặp, có thể giảm về 0 nếu muốn sát hẳn */
+}
+
+    .bc-search-pair:last-child {
+        margin-right: 0;
+    }
+
+    .bc-search-pair label {
+        min-width: 80px;
+        font-size: 0.98rem;
+        color: #2563eb;
+        font-weight: 600;
+        text-align: right;
+        margin-bottom: 0;
+        padding-right: 0;
+    }
+
+.bc-input-icon-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.bc-search-input-mini {
+    width: 140px; /* Tăng chiều dài nếu muốn */
+    min-width: 100px;
+    padding: 4px 8px 4px 28px;
+    border: 1px solid #d1d5db;
+    border-radius: 5px;
+    font-size: 0.98rem;
+    background: #fff;
+    color: #2563eb;
+    height: 32px;
+    margin-right: 0;
+    box-sizing: border-box;
+}
+
+.bc-icon-search {
     position: absolute;
     left: 8px;
     top: 50%;
     transform: translateY(-50%);
-    color: #666;
+    color: #2563eb;
+    font-size: 1em;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
 }
 
+.bc-search-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-left: 32px; /* Tách xa khỏi cụm search */
+}
+
+.bc-priority-label {
+    font-size: 1rem;
+    color: #374151;
+    font-weight: 600;
+    margin-right: 10px;
+}
+
+.bc-btn-check-bhyt {
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    padding: 8px 18px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: background 0.18s;
+}
+
+    .bc-btn-check-bhyt:hover {
+        background: #1e40af;
+    }
+
+
+
+@media (max-width: 900px) {
+    .bc-search-row {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .bc-search-actions {
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 600px) {
+    .bc-search-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Tab Styles */
 .tab {
     display: inline-block;
     padding: 0.5rem 1rem;
@@ -48,6 +163,7 @@
         background-color: #d1e4ff;
     }
 
+/* Fancy Button Styles */
 .fancy-button {
     position: relative;
     background: linear-gradient(90deg, #ff7e5f, #feb47b);
@@ -89,6 +205,7 @@
         height: 300px;
     }
 
+/* Action Button Styles */
 .action-button-new {
     position: relative;
     background: linear-gradient(90deg, #4caf50, #66bb6a);
@@ -171,8 +288,7 @@
         height: 300px;
     }
 
-/* AI section */
-
+/* AI Section */
 .app-header .heading {
     font-size: 3rem;
     width: fit-content;
@@ -200,7 +316,7 @@
     color: white;
 }
 
-.prompt-container :where(.prompt-wrapper, .prompt-form, prompt-action) {
+.prompt-container :where(.prompt-wrapper, .prompt-form, .prompt-action) {
     display: flex;
     gap: 12px;
     height: 56px;
@@ -214,31 +330,26 @@
     border-radius: 130px;
 }
 
-.prompt-form .prompt-input::placeholder {
-}
-
-.chat-container .message-text {
-    color: white
-}
-
 .chat-container {
     max-height: 80vh;
     height: 80vh;
 }
 
     .chat-container .bot-message {
-        font-size:2vh;
-        color:white;
-        width:75%;
+        font-size: 2vh;
+        color: white;
+        width: 75%;
     }
+
     .chat-container .bot-icon {
         width: 3%;
     }
+
     .chat-container .user-message {
         display: flex;
         flex-direction: column;
-        align-items: flex-end; /* đẩy nội dung về bên phải */
-        margin-bottom: 8px; /* khoảng cách giữa các tin nhắn */
+        align-items: flex-end;
+        margin-bottom: 8px;
     }
 
         .chat-container .user-message .message-text {
@@ -253,5 +364,322 @@
 .prompt-form .recordAudio {
     font-size: 2vh;
     color: white;
-    cursor:pointer;
+    cursor: pointer;
 }
+
+/* BC Search Styles */
+.bc-search-bhyt-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+    gap: 0px;
+    background: #f8fafc;
+    padding: 14px 18px;
+    border-radius: 8px;
+    box-shadow: 0 1px 6px rgba(44,62,80,0.05);
+    margin-bottom: 16px;
+    align-items: end;
+}
+
+.bc-search-field {
+    display: flex;
+    flex-direction: column;
+}
+
+    .bc-search-field label {
+        font-size: 0.98rem;
+        color: #2563eb;
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+
+.bc-input-icon-group {
+    position: relative;
+    width: 100%;
+}
+
+    .bc-input-icon-group input[type="text"] {
+        width: 100%;
+        max-width: 200px; /* thêm dòng này để giới hạn chiều rộng */
+        padding: 7px 12px 7px 36px;
+        border: 1px solid #d1d5db;
+        border-radius: 5px;
+        font-size: 1rem;
+        background: #fff;
+        transition: border 0.18s;
+    }
+
+    .bc-input-icon-group input:focus {
+        border: 1.5px solid #2563eb;
+        outline: none;
+    }
+
+.bc-icon-search {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #2563eb;
+    font-size: 1.05rem;
+    pointer-events: none;
+    display: flex彼此 System: .flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.bc-btn-check-bhyt {
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    padding: 8px 18px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: background 0.18s;
+}
+
+    .bc-btn-check-bhyt:hover {
+        background: #1e40af;
+    }
+
+.bc-priority-label {
+    font-size: 1rem;
+    color: #374151;
+    font-weight: 600;
+    margin-left: 10px;
+}
+
+.bc-bhyt-info-section {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    margin-top: 6px;
+}
+
+.bc-bhyt-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+    .bc-bhyt-row label {
+        min-width: 88px;
+        font-size: 0.98rem;
+        color: #000 !important;
+        font-weight: 600;
+    }
+
+.bc-bhyt-short {
+    width: 40px;
+    padding: 6px 6px;
+    border: 1px solid #d1d5db;
+    border-radius: 5px;
+    font-size: 1rem;
+    background: #fff;
+}
+
+.bc-bhyt-long {
+    width: 120px;
+    padding: 6px 6px;
+    border: 1px solid #d1d5db;
+    border-radius: 5px;
+    font-size: 1rem;
+    background: #fff;
+}
+
+.bc-bhyt-row-flex {
+    gap: 12px;
+}
+
+.bc-bhyt-tuyen {
+    width: 120px;
+    padding: 6px 6px;
+    border: 1px solid #d1d5db;
+    border-radius: 5px;
+    font-size: 1rem;
+    background: #fff;
+}
+
+.bc-bhyt-muchuong-label {
+    min-width: 80px;
+    font-size: 0.98rem;
+    color: #2563eb;
+    font-weight: 600;
+    margin-left: 12px;
+}
+
+.bc-bhyt-muchuong-input {
+    width: 60px;
+    padding: 6px 6px;
+    border: 1px solid #d1d5db;
+    border-radius: 5px;
+    font-size: 1rem;
+    background: #fff;
+}
+
+.bc-bhyt-percent {
+    font-size: 1rem;
+    color: #2563eb;
+    margin-left: 3px;
+}
+
+.bc-bhyt-chungnhan {
+    color: #b0b7c3;
+    font-size: 0.98rem;
+    margin-left: 4px;
+    font-style: italic;
+}
+
+.bc-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+    gap: 18px;
+    margin-bottom: 18px;
+    align-items: flex-end;
+}
+
+.bc-form-col {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.bc-form-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+    .bc-form-group label {
+        min-width: 100px;
+        font-size: 0.98rem;
+        color: #000 !important;
+        font-weight: 600;
+        text-align: left;
+    }
+
+    .bc-form-group input,
+    .bc-form-group select {
+        flex: 1;
+        padding: 7px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 5px;
+        font-size: 1rem;
+        background: #fff;
+        transition: border 0.18s;
+    }
+
+        .bc-form-group input:focus,
+        .bc-form-group select:focus {
+            border: 1.5px solid #2563eb;
+            outline: none;
+        }
+
+.bc-form-col-bhyt {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+/* Media Queries */
+@media (max-width: 1200px) {
+    .search-bar-row {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .search-actions {
+        margin-left: 0;
+    }
+
+    .bc-search-bhyt-row {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 700px) {
+    .bc-search-bhyt-row {
+        grid-template-columns: 1fr;
+    }
+}
+.bc-action-row {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+.bc-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 22px;
+    padding: 0.5rem 1.25rem;
+    border: 2px solid #2563eb;
+    background: #fff;
+    color: #2563eb;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+    outline: none;
+    box-shadow: none;
+    position: relative;
+    user-select: none;
+}
+
+.bc-btn-icon {
+    display: flex;
+    align-items: center;
+}
+
+.bc-btn-outline {
+    background: #fff;
+    color: #2563eb;
+    border: 2px solid #2563eb;
+}
+
+    .bc-btn-outline:hover, .bc-btn-outline:focus {
+        background: #e5f0ff;
+        color: #2563eb;
+    }
+
+.bc-btn-solid {
+    background: #2563eb;
+    color: #fff;
+    border: 2px solid #2563eb;
+}
+
+    .bc-btn-solid:hover, .bc-btn-solid:focus {
+        background: #1746a2;
+        color: #fff;
+    }
+
+.bc-btn-list-wrap {
+    margin-bottom: 18px;
+}
+
+    .bc-btn-list-wrap .bc-btn {
+        min-width: 160px;
+    }
+
+    .bc-btn-list-wrap .bc-btn-outline {
+        background: #fff;
+        color: #2563eb;
+        border: 2px solid #2563eb;
+    }
+
+        .bc-btn-list-wrap .bc-btn-outline:hover, .bc-btn-list-wrap .bc-btn-outline:focus {
+            background: #e5f0ff;
+            color: #2563eb;
+        }
+/* Đảm bảo icon và chữ căn giữa */
+.btn .bi-person-circle {
+    vertical-align: middle;
+}
+
