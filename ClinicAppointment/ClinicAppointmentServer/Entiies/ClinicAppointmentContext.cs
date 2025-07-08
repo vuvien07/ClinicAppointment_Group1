@@ -6,10 +6,6 @@ namespace ClinicAppointmentServer.Entiies;
 
 public partial class ClinicAppointmentContext : DbContext
 {
-    public ClinicAppointmentContext()
-    {
-    }
-
     public ClinicAppointmentContext(DbContextOptions<ClinicAppointmentContext> options)
         : base(options)
     {
@@ -26,10 +22,6 @@ public partial class ClinicAppointmentContext : DbContext
     public virtual DbSet<PhongKham> PhongKhams { get; set; }
 
     public virtual DbSet<ThongTinPhongKham> ThongTinPhongKhams { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("server =localhost;database=EXE201;uid=sa;pwd=123;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -89,7 +81,7 @@ public partial class ClinicAppointmentContext : DbContext
 
             entity.ToTable("DatLichHen");
 
-            entity.Property(e => e.LichHenId).HasColumnName("LichHenID");
+            entity.Property(e => e.LichHenId).HasColumnName("LichHenID").ValueGeneratedOnAdd();
             entity.Property(e => e.BenhNhanId).HasColumnName("BenhNhanID");
             entity.Property(e => e.Gio).HasMaxLength(10);
             entity.Property(e => e.LyDoKham).HasMaxLength(255);

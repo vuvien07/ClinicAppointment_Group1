@@ -11,5 +11,6 @@ namespace ClinicAppointmentServer.DTO.Implements
 		public string? Cccd{get;set;}
 		public string? NgheNghiep{get;set;}
 		public string? DanToc{get;set;}
+		public string? QuocTich{get;set;}
 	}
 }

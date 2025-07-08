@@ -17,9 +17,9 @@ namespace ClinicAppointmentServer.Repositories.Implements
 			await _appointmentContext.SaveChangesAsync();
 		}
 
-		public async Task<BenhNhan?> GetPatientByCccd(string cccd)
+		public async Task<BenhNhan?> GetPatientByCccdAndPhone(string cccd, string phone)
 		{
-			return await _appointmentContext.BenhNhans.FirstOrDefaultAsync(b => b.Cccd == cccd);
+			return await _appointmentContext.BenhNhans.FirstOrDefaultAsync(b => b.Cccd == cccd && b.SoDienThoai == phone);
 		}
 	}
 }

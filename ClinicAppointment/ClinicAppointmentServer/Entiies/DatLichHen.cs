@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ClinicAppointmentServer.Entiies;
 
 public partial class DatLichHen
 {
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int LichHenId { get; set; }
 
     public int? BenhNhanId { get; set; }

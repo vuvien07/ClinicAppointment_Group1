@@ -49,5 +49,28 @@ namespace ClinicAppointmentServer.Controllers
 			await _bookClinicService.CreateBookClinic(bookClinicDTO);
 			return Ok(new { message = "Đặt lịch thành công" });
 		}
+
+		[HttpPost("addToElectronicDisease")]
+		public async Task<IActionResult> AddElectronicDisease([FromBody] BookClinicDTO bookClinicDTO)
+		{
+			bool isValid = TryValidateModel(bookClinicDTO);
+			if (!isValid)
+			{
+				var errors = new Dictionary<string, string>();
+
+				foreach (var key in ModelState.Keys)
+				{
+					var entry = ModelState[key];
+					if (entry != null && entry.Errors.Count > 0)
+					{
+						var firstError = entry.Errors.First();
+						errors.TryAdd(key, firstError.ErrorMessage);
+					}
+				}
+				return BadRequest(new { errors = errors });
+			}
+			await _bookClinicService.AddElectronicDisease(bookClinicDTO);
+			return Ok(new {message="Thêm vào bệnh án điện tử thành công"});
+		}
 	}
 }

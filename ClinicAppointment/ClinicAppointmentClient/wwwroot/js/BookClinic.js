@@ -1,5 +1,16 @@
 ﻿const host = window.location.hostname;
 let isStartCallAI = false;
+let totalFilterSchedulePage = 0;
+
+let filterpatientSchedule = {
+    page: 1,
+    pageSize: 15,
+    gender: '',
+    clinicId: 0,
+    keyword: '',
+    startDate: '',
+    endDate: ''
+} 
 
 window.onload = async () => {
     const params = new URLSearchParams(window.location.search);
@@ -10,6 +21,17 @@ window.onload = async () => {
     }
     document.querySelector('.chat-container').innerHTML = '';
     await getClinicList();
+        audioRemote = document.getElementById("audio_remote");
+        addHtmlLogin();
+        addHtml();
+        loadCredentials();
+
+        if (usingAutoLogin === 1) {
+            onRegister();
+            loadContentPhoneDial();
+        } else {
+            loadContentPhone();
+        }
 }
 
 async function startCall(e) {
@@ -130,7 +152,7 @@ async function UpdateClinicList(data) {
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">${item.thongTinPhongKhams[0]?.hen || 0}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">${item.thongTinPhongKhams[0]?.dangKy || 0}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">${item.thongTinPhongKhams[0]?.kham || 0}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">1</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">${(item.thongTinPhongKhams[0]?.hen || 0) + (item.thongTinPhongKhams[0]?.dangKy || 0) + (item.thongTinPhongKhams[0]?.kham || 0) }</td>
          </tr>
         `;
     });
@@ -458,4 +480,114 @@ function clearMessage(e) {
     } else {
         console.warn("Chat container not found");
     }
+}
+
+async function addToBenhAnDienTu(e) {
+    e.preventDefault();
+    try {
+        e.preventDefault();
+        const labels = ['HovaTen', 'GioiTinh', 'NgaySinhStr', 'SoDienThoai', 'Cccd', 'NgheNghiep', 'DanToc', 'LyDoKham', 'QuocTich', 'PhongKhamId'];
+        const formData = {};
+
+        labels.forEach(label => {
+            const input = document.querySelector(`input[name="${label}"], select[name="${label}"]`);
+            if (input) {
+                formData[label] = label === 'PhongKhamId' ? parseInt(input.value) || 0 : input.value;
+            } else {
+                console.warn(`Input or select with name '${label}' not found`);
+            }
+        });
+        formData['LichHenId'] = parseInt(document.querySelector('input[name="LichHenId"]').value) || 0;
+        const res = await fetch(`http://${host}:5132/api/BookClinic/addToElectronicDisease`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData)
+        });
+        const json = await res.json();
+        if (!res.ok) {
+            if (json.errors) {
+                labels.forEach(label => DisplayError(label, json.errors));
+                showSnackbar("Vui lòng kiểm tra các trường thông tin", "error");
+            } else if (json.status === 500) {
+                showSnackbar(json.message, "error");
+            }
+        } else {
+            showSnackbar(json.message, "success");
+            await getClinicList();
+        }
+
+    } catch (err) {
+        console.error(err)
+        showSnackbar("Có lỗi xảy ra", "error");
+    }
+}
+
+async function fetchAllPatientSchedule(e) {
+    e.preventDefault();
+    try {
+        const response = await fetch(`http://${host}:5132/api/Patient`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(filterpatientSchedule),
+        });
+
+        const json = await response.json();
+
+        if (response.ok) {
+            updatePatientScheduleTable(json.schedules);
+            totalFilterSchedulePage = json.totalPage;
+            document.getElementById('current-page').innerText = json.page;
+            document.getElementById('total-records').innerText = (json.schedules?.length || 0)  + " / " + (filterpatientSchedule.pageSize || 0);
+        } else {
+            showSnackbar("Lỗi khi lấy lịch khám", "error");
+        }
+    } catch (err) {
+        console.error(err);
+        showSnackbar("Có lỗi xảy ra", "error");
+    }
+}
+
+
+function updatePatientScheduleTable(data) {
+    let contentHtml = ``;
+    data?.map((schedule, index) => {
+        contentHtml += `
+         <tr data-schedule='${JSON.stringify(schedule)}' onclick="autoCompleteClinicForm(event, this)">
+                                <td class="border p-2">${index + 1}</td>
+                                <td class="border p-2">${schedule.patientDTO?.hovaTen || ''}</td>
+                                <td class="border p-2">${schedule.patientDTO?.ngaySinh || ''}</td>
+                                <td class="border p-2">${schedule.patientDTO?.diaChi || ''}</td>
+                                <td class="border p-2">${schedule.patientDTO?.soDienThoai || ''}</td>
+                                <td class="border p-2">${schedule.patientDTO?.gioiTinh || ''}</td>
+                                <td class="border p-2">Người lớn</td>
+                                <td class="border p-2">Có</td>
+                                <td class="border p-2">${schedule.lyDoKham || ''}</td>
+                                <td class="border p-2">Khám tổng quát</td>
+                                <td class="border p-2">${schedule.clinicDTO?.tenPhong || ''}</td>
+                                <td class="border p-2">Đã đăng ký</td>
+                            </tr>
+        `;
+    });
+    document.getElementById('patient-schedule-table-body').innerHTML = contentHtml;
+
+}
+
+function autoCompleteClinicForm(e, element) {
+    e.preventDefault();
+    let parsedData = JSON.parse(element.dataset.schedule);
+    document.querySelector('input[name="HovaTen"]').value = parsedData.patientDTO?.hovaTen || '';
+    document.querySelector('input[name="NgaySinhStr"]').value = parsedData.patientDTO?.ngaySinh || '';
+    document.querySelector('input[name="SoDienThoai"]').value = parsedData.patientDTO?.soDienThoai || '';
+    document.querySelector('input[name="LyDoKham"]').value = parsedData.lyDoKham || '';
+    document.querySelector('select[name="PhongKhamId"').value = parsedData.clinicDTO?.phongKhamId || '';
+    document.querySelector('input[name="Cccd"').value = parsedData.patientDTO?.cccd || '';
+    document.querySelector('select[name="QuocTich"').value = parsedData.patientDTO?.quocTich || '';
+    document.querySelector('select[name="DanToc"').value = parsedData.patientDTO?.danToc || '';
+    document.querySelector('input[name="NgheNghiep"').value = parsedData.patientDTO?.ngheNghiep || '';
+    document.querySelector('select[name="GioiTinh"').value = parsedData.patientDTO?.gioiTinh || '';
+    document.querySelector('input[name="LichHenId"]').value = parsedData.lichHenId || 0;
 }

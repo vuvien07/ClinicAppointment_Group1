@@ -7,5 +7,6 @@ namespace ClinicAppointmentServer.Services
 	{
 		Task CreateBookClinic(BookClinicDTO bookClinicDTO);
 		Task<List<PhongKham>> GetAllClinic();
+		Task AddElectronicDisease(BookClinicDTO bookClinicDTO);
 	}
 }

@@ -5,6 +5,6 @@ namespace ClinicAppointmentServer.Repositories
 	public interface IPatientRepository
 	{
 		Task AddPatient(BenhNhan benhNhan);
-		Task<BenhNhan?> GetPatientByCccd(string cccd);
+		Task<BenhNhan?> GetPatientByCccdAndPhone(string cccd, string phone);
 	}
 }

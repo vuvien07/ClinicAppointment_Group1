@@ -16,11 +16,11 @@ namespace ClinicAppointmentServer
 		{
 			var builder = WebApplication.CreateBuilder(args);
 			ConfigureServices(builder.Services);
-			builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
-			{
-				var configuration = builder.Configuration.GetSection("Redis")["ConnectionString"];
-				return ConnectionMultiplexer.Connect(configuration);
-			});
+			//builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+			//{
+			//	var configuration = builder.Configuration.GetSection("Redis")["ConnectionString"];
+			//	return ConnectionMultiplexer.Connect(configuration);
+			//});
 			builder.Services.AddAuthorization();
 			var app = builder.Build();
 			app.UseMiddleware<ExceptionHandlerMiddleware>();
@@ -37,9 +37,8 @@ namespace ClinicAppointmentServer
 			services.AddControllers()
 				.ConfigureApiBehaviorOptions(
 				options => options.SuppressModelStateInvalidFilter = true
-				);
-
-
+				)
+				.AddJsonOptions(options => options.JsonSerializerOptions.PropertyNameCaseInsensitive = true);
 			services.AddDbContext<ClinicAppointmentContext>(options => options.UseSqlServer("Name=ConnectionStrings:DBContext"));
 			services.AddCors(options =>
 			{
@@ -53,7 +52,7 @@ namespace ClinicAppointmentServer
 			});
 			services.AddScoped(typeof(ClinicAppointmentContext));
 			services.AddTransient<ILoginService, LoginService>();
-			services.AddScoped<IConversationService, ConversationService>();
+			//services.AddScoped<IConversationService, ConversationService>();
 			services.AddTransient<IGeminiService, GeminiService>();
 			services.AddTransient<IClinicInfoService, ClinicInfoService>();
 			services.AddTransient<IClinicRepository, ClinicRepository>();
@@ -62,6 +61,8 @@ namespace ClinicAppointmentServer
 			services.AddTransient<IBookClinicService, BookClinicService>();
 			services.AddTransient<IPlanScheduleRepository, PlanScheduleRepository>();
 			services.AddTransient<IPatientRepository, PatientRepository>();
+			services.AddTransient<IElectronicDiseaseRepository, ElectronicDiseaseRepository>();
+			services.AddTransient<IPatientService, PatientService>();
 			services.AddTransient<IJwtService, JwtService>();
 		}
 	}

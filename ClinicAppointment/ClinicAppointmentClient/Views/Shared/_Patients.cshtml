@@ -17,8 +17,8 @@
             </li>
             <li>
                 <label class="block mb-1">Giới tính</label>
-                <select id="gender-select" onchange="filterPatients()" class="border rounded p-1 w-full">
-                    
+                <select id="gender-select" onchange="changeGender(event)" class="border rounded p-1 w-full">
+                    <option value="">Tất cả giới tính</option>
                     <option value="Nam">Nam</option>
                     <option value="Nữ">Nữ</option>
                 </select>
@@ -34,13 +34,14 @@
             
             <li>
                 <label class="block mb-1">Phòng khám</label>
-                <select id="clinic-select" onchange="filterPatients()" class="border rounded p-1 w-full">                   
-                    <option value="pkRangHamMat">Phòng khám Răng Hàm Mặt - P303</option>
-                    <option value="pkNoi2">Phòng khám NỘI 2 (HSTC) - P411B</option>
-                    <option value="pkDaLieu">Phòng khám Da Liễu - P202</option>
-                    <option value="pkDongYPHCN">Phòng khám Đông y - PHCN 1(CS1) - P409</option>
-                    <option value="pkNgoai">Phòng khám Ngoại - P403</option>
-                    <option value="pkTongHop">Phòng khám tổng hợp</option>
+                <select id="clinic-select" onchange="changePhongKham(event)" class="border rounded p-1 w-full">
+                    <option value="">Tất cả phòng khám</option>
+                    <option value="1">Phòng khám Răng Hàm Mặt - P303</option>
+                    <option value="2">Phòng khám NỘI 2 (HSTC) - P411B</option>
+                    <option value="3">Phòng khám Da Liễu - P202</option>
+                    <option value="4">Phòng khám Đông y - PHCN 1(CS1) - P409</option>
+                    <option value="5">Phòng khám Ngoại - P403</option>
+                    <option value="6">Phòng khám tổng hợp</option>
                     <!-- Thêm các phòng khám khác nếu có -->
                 </select>
             </li>
@@ -86,23 +87,23 @@
             <div class="flex space-x-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700" for="from-date">Từ ngày</label>
-                    <input type="date" id="from-date" value="2025-05-23" class="border rounded p-1 w-36">
+                    <input type="date" id="from-date" class="border rounded p-1 w-36" onchange="changeStartDate(event)">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700" for="to-date">Đến ngày</label>
-                    <input type="date" id="to-date" value="2025-05-23" class="border rounded p-1 w-36">
+                    <input type="date" id="to-date" class="border rounded p-1 w-36" onchange="changeEndDate(event)">
                 </div>
             </div>
             <!-- Dropdown lọc nhanh (search filter) -->
-            <select class="border rounded p-1">
-                <option value="">Chọn lọc nhanh</option>
-                <option value="dangCho">Đang chờ</option>
-                <option value="daKham">Đã khám</option>
-                <option value="daHuy">Đã hủy</option>
-            </select>
+            @* <select class="border rounded p-1"> *@
+            @*     <option value="">Chọn lọc nhanh</option> *@
+            @*     <option value="dangCho">Đang chờ</option> *@
+            @*     <option value="daKham">Đã khám</option> *@
+            @*     <option value="daHuy">Đã hủy</option> *@
+            @* </select> *@
             <div class="flex items-center w-full md:w-auto">
-                <input type="text" id="search-input" placeholder="Tìm kiếm" class="border rounded-l p-1 w-full md:w-64">
-                <button onclick="searchPatients()" class="bg-blue-600 text-white p-1 rounded-r px-3">
+                <input type="text" id="search-input" name="searchString" placeholder="Tìm kiếm" class="border rounded-l p-1 w-full md:w-64">
+                <button onclick="clickSearch(event)" class="bg-blue-600 text-white p-1 rounded-r px-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
@@ -145,7 +146,7 @@
                                 <th class="border p-2">Đăng ký khám</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="patient-schedule-table-body">
                             <tr>
                                 <td class="border p-2">1</td>
                                 <td class="border p-2">Nguyễn Văn A</td>
@@ -187,18 +188,18 @@
             <div class="text-sm text-gray-600 mb-2 md:mb-0">
                 Tổng số bệnh ghi: <span id="total-records">0/0</span>
             </div>
-            <div class="flex items-center space-x-2 mb-2 md:mb-0">
-                <span class="status-dot status-waiting"></span><span class="text-sm">Chưa khám</span>
-                <span class="status-dot status-in-progress"></span><span class="text-sm">Đang khám</span>
-                <span class="status-dot status-completed"></span><span class="text-sm">Đã có kết quả</span>
-            </div>
+            @* <div class="flex items-center space-x-2 mb-2 md:mb-0"> *@
+            @*     <span class="status-dot status-waiting"></span><span class="text-sm">Chưa khám</span> *@
+            @*     <span class="status-dot status-in-progress"></span><span class="text-sm">Đang khám</span> *@
+            @*     <span class="status-dot status-completed"></span><span class="text-sm">Đã có kết quả</span> *@
+            @* </div> *@
             <div class="flex items-center space-x-2">
-                <button class="border rounded p-1" onclick="previousPage()">◄</button>
+                <button class="border rounded p-1" onclick="clickPrevious(event)">◄</button>
                 <span class="text-sm" id="current-page">1</span>
-                <button class="border rounded p-1" onclick="nextPage()">►</button>
+                <button class="border rounded p-1" onclick="clickNext(event)">►</button>
                 <span class="text-sm">Số hàng: </span>
-                <select id="rows-per-page" onchange="changeRowsPerPage()" class="border rounded p-1">
-                    <option value="15" selected>15</option>
+                <select id="rows-per-page" onchange="changeRowsPerPage(event)" class="border rounded p-1">
+                    <option value="" selected>15</option>
                     <option value="30">30</option>
                     <option value="50">50</option>
                 </select>
