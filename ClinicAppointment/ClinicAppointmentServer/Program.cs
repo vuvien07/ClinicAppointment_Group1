@@ -22,6 +22,7 @@ namespace ClinicAppointmentServer
 			//	return ConnectionMultiplexer.Connect(configuration);
 			//});
 			builder.Services.AddAuthorization();
+			builder.Services.AddHttpClient();
 			var app = builder.Build();
 			app.UseMiddleware<ExceptionHandlerMiddleware>();
 			app.UseCors("AllowAll");

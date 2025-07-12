@@ -13,8 +13,10 @@
 
 <body>
     <partial name="~/Views/Shared/_SnackBar.cshtml" />
+    <partial name="~/Views/Shared/_LoadingSpinner.cshtml" />
     @RenderBody()
     <script src="~/js/common/Snackbar.js" asp-append-version="true"></script>
+    <script src="~/js/common/LoadingSpinner.js" asp-append-version="true"></script>
     <script src="~/js/common/Util.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>

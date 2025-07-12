@@ -42,7 +42,7 @@ namespace ClinicAppointmentServer.Services.Implements
 				{
 					throw new Exception("Không thể thêm bệnh án điện tử vì chưa có thông tin phòng khám");
 				}
-				thongTinPhongKham.Hen -= 1;
+				thongTinPhongKham.Hen -= thongTinPhongKham.Hen > 0 ? 1 : 0;
 				thongTinPhongKham.DangKy += 1;
 				await _clinicInfoRepository.UpdateClinicInfo(thongTinPhongKham);
 				await transaction.CommitAsync();
@@ -59,14 +59,14 @@ namespace ClinicAppointmentServer.Services.Implements
 				if(findPatient == null)
 				{
 					await _patientRepository.AddPatient(benhNhan);
-					datLichHen.BenhNhanId = findPatient.BenhNhanId;
-					datLichHen.Ngay = bookClinicDTO.Ngay;
+					datLichHen.BenhNhanId = benhNhan.BenhNhanId;
+					datLichHen.Ngay = DateOnly.FromDateTime(DateTime.Now);
 					datLichHen.Gio = bookClinicDTO.Gio;
 				}
 				else
 				{
 					datLichHen.BenhNhanId = findPatient.BenhNhanId;
-					datLichHen.Ngay = bookClinicDTO.Ngay;
+					datLichHen.Ngay = DateOnly.FromDateTime(DateTime.Now);
 					datLichHen.Gio = bookClinicDTO.Gio;
 				}
 				ThongTinPhongKham? thongTinPhongKham = await _clinicInfoRepository.GetClinicInfo(DateOnly.FromDateTime(DateTime.Now), bookClinicDTO.PhongKhamId ?? 0);

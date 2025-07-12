@@ -136,6 +136,25 @@ Kết quả trích xuất:
 Dưới đây là thông tin bạn đã cung cấp:
 Lí do khám: Đau bụng
 
+-- Giờ khám bệnh ---
+Văn bản người dùng:
+"Giờ khám là lúc tám giờ sáng"
+Kết quả trích xuất:
+Dưới đây là thông tin bạn đã cung cấp:
+Giờ khám: 08:00 AM
+Văn bản người dùng:
+"Giờ khám là lúc tám giờ tối"
+Kết quả trích xuất:
+Dưới đây là thông tin bạn đã cung cấp:
+Giờ khám: 08:00 PM
+Văn bản người dùng:
+"Giờ khám là lúc mười lăm giờ ba mươi phút"
+Kết quả trích xuất:
+Dưới đây là thông tin bạn đã cung cấp:
+Giờ khám: 03:30 PM
+
+
+
 --- Nghề nghiệp ---
 Văn bản người dùng:
 "Nghề nghiệp tôi là công chức"
@@ -172,6 +191,7 @@ Nghề nghiệp: Công chức
 - **Quốc tịch**: "quốc tịch", "tôi là người", "tôi mang quốc tịch"
 - **Phòng khám**: "phòng khám", "bệnh viện", "trung tâm y tế", "khám ở"
 - **Lý do khám**: "tôi bị", "khám vì", "lý do khám", "triệu chứng", "bị"
+- **Giờ khám**: "giờ khám", "giờ", "giờ khám", "thời gian", "thời gian khám"
 
 ==============================
 4. 🏥 TỰ ĐỘNG ĐIỀN ID CỦA PHÒNG KHÁM THEO LÍ DO KHÁM 
@@ -213,6 +233,7 @@ Yêu cầu:
   Căn cước công dân: [giá trị]
   Nghề nghiệp: [giá trị]
   Phòng khám: [giá trị số theo lí do khám ở trên]
+  Giờ khám: [giá trị]
 
 - Nếu tất cả thông tin đã có đầy đủ, trả lời:
   Thông tin đã được nhập đầy đủ.

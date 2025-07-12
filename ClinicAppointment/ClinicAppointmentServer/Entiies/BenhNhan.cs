@@ -23,6 +23,8 @@ public partial class BenhNhan
 
     public string? DanToc { get; set; }
 
+    public string? QuocTich { get; set; }
+
     public virtual ICollection<BenhAnDienTu> BenhAnDienTus { get; set; } = new List<BenhAnDienTu>();
 
     public virtual ICollection<DatLichHen> DatLichHens { get; set; } = new List<DatLichHen>();

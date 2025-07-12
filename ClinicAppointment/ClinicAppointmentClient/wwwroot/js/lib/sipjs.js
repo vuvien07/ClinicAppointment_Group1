@@ -5,7 +5,7 @@ var timeCount = 0;
 var audioRemote;
 var isAutoAnswer = 1;
 var usingCallJs = 1;
-var usingAutoLogin = 0;
+var usingAutoLogin = 1;
 
 var callOptions = {
     pcConfig: {
@@ -37,13 +37,13 @@ var callOptions = {
 function addHtmlLogin() {
     if (usingAutoLogin === 1) {
         document.getElementById('alohub_sipml5').innerHTML += "<input type=\"text\" id=\"txtDomain\" value=\"\" class=\"hidden\" placeholder=\"e.g: alohub.vn\">\n" +
-            "    <input type=\"password\" id=\"txtApiKey\" value=\"\" class=\"hidden\" placeholder=\"apiKey\">\n" +
-            "    <input type=\"text\" id=\"txtWebsocketServerUrl\" value=\"\" class=\"hidden\"\n" +
+            "    <input type=\"password\" id=\"txtApiKey\" value=\"brhsgtpukcjjzpxvfibxebcoqlcuen\" class=\"hidden\" placeholder=\"apiKey\">\n" +
+            "    <input type=\"text\" id=\"txtWebsocketServerUrl\" value=\"wss://crm.alohub.vn:57445\" class=\"hidden\"\n" +
             "           placeholder=\"e.g: wss://alohub.vn:7443\">\n" +
-            "    <input type=\"text\" id=\"txtPrivateIdentity\" value=\"\" class=\"hidden\" placeholder=\"e.g: 9999\">\n" +
-            "    <input type=\"password\" id=\"txtPassword\" value=\"\" class=\"hidden\">\n" +
-            "    <input type=\"text\" id=\"txtDisplayName\" value=\"\" class=\"hidden\">\n" +
-            "    <input type=\"text\" id=\"txtPublicIdentity\" value=\"\" class=\"hidden\">";
+            "    <input type=\"text\" id=\"txtPrivateIdentity\" value=\"15655\" class=\"hidden\" placeholder=\"e.g: 9999\">\n" +
+            "    <input type=\"password\" id=\"txtPassword\" value=\"VIENVU@#2025\" class=\"hidden\">\n" +
+            "    <input type=\"text\" id=\"txtDisplayName\" value=\"15655\" class=\"hidden\">\n" +
+            "    <input type=\"text\" id=\"txtPublicIdentity\" value=\"sip:15655@crm.alohub.vn:55094\" class=\"hidden\">";
     } else {
         document.getElementById('alohub_sipml5').innerHTML += "<div id=\"alohub_login_content\">\n" +
             "        <button id=\"btnOpenLoginForm\" class=\"alohub_button-call\" onclick=\"onTogglePhone();\">\n" +
@@ -89,7 +89,7 @@ function addHtmlLogin() {
 function addHtml() {
     document.getElementById('alohub_sipml5').innerHTML += '<!--Form Login\'-->\n' +
         '    <!--Form nhập số điện thoại(có validate số, enter sẽ gọi ra, và có 2 position khi người dùng thay đổi)-->\n' +
-        '    <div id="alohub_call_dial">\n' +
+        '    <div id="alohub_call_dial" style="display: none">\n' +
         '            <span class="alohub_icon_full" onclick="minimizeContent();">\n' +
         '                    <svg width="25" height="25" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" fill="none"\n' +
         '                         stroke="customColor">\n' +
@@ -403,7 +403,7 @@ function onRegister() {
         //const button = document.getElementById("callHelperButton");
         //button.click();
         //hiddenLogin();
-        loadContentPhoneDial();
+        //loadContentPhoneDial();
     });
 
     coolPhone.on('disconnected', function (e) {
@@ -429,6 +429,9 @@ function onRegister() {
             console.log('===ended===');
             loadContentPhoneDial();
             onClearInterVal();
+            document.querySelector('#alohub_call_dial').style.display = 'none';
+            document.querySelector('#alohub_calling_content').style.display = 'none';
+            document.querySelector('#alohub_answer_content').style.display = 'none';
         });
 
         session.on('connecting', function () {
@@ -448,9 +451,22 @@ function onRegister() {
             loadContentPhoneAnswer();
         });
 
-        session.on('confirmed', function () {
+        session.on('confirmed', async function () {
             console.log('===confirmed===');
             stopRingTone();
+            if (isCalledWithClient) {
+                await playTTSAndSendToCall(session, 'Lãnh thổ Việt Nam xuất hiện con người sinh sống từ thời đại đồ đá cũ, khởi đầu với các nhà nước Văn Lang, Âu Lạc. Âu Lạc bị nhà Triệu ở phương Bắc thôn tính vào đầu');
+                await waitUntilRemoteUserStopsSpeaking(audioRemote.srcObject, 3000);
+                 await playTTSAndSendToCall(session, 'Âu Lạc bị nhà Triệu ở phương Bắc thôn tính vào đầu.', true);
+            }
+            if (isBookedFail) {
+                await playTTSAndSendToCall(session, 'Đặt lịch thất bại. Xin vui lòng thử lại. Trân trọng cảm ơn.', true);
+                isBookedFail = false;
+            }
+            if (isBookedSuccess) {
+                await playTTSAndSendToCall(session, 'Đặt lịch thành công. Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.', true);
+                isBookedSuccess = false;
+            }
         });
 
         session.on('addstream', function (e) {
@@ -522,7 +538,7 @@ function onRegister() {
     coolPhone.on('registered', function (e) {
         /* Your code here */
         console.log('===registered===');
-        loadContentPhoneDial();
+        //loadContentPhoneDial();
     });
 
     coolPhone.on('unregistered', function (e) {
@@ -577,6 +593,18 @@ function onCall() {
     addPhoneNumber(numberPhone);
 }
 
+function onCallWithProvidedNumber(number) {
+
+    if (usingCallJs === 1) {
+        coolPhone.call(number, callOptions);
+    } else {
+        alohubMakeCall(number);
+    }
+    loadContentPhoneRinging();
+    document.querySelector('#alohub_calling_content').style.display = 'none';
+    addPhoneNumber(number);
+}
+
 function onAnswer() {
     if (session) {
         session.answer(callOptions);
@@ -605,4 +633,93 @@ function filterSDP(sdp) {
         // Loại bỏ các dòng chứa candidate IPv6
         return !/^a=candidate:\d+ \d+ \w+ \d+ [0-9a-fA-F:]+ .*/.test(line);
     }).join('\r\n');
+}
+async function playTTSAndSendToCall(session, text, isEnded = false) {
+    try {
+        const formData = new FormData();
+        formData.append("text", text);
+
+        const res = await fetch('http://localhost:8001/tts', {
+            method: "POST",
+            body: formData
+        });
+
+        if (!res.ok) throw new Error("Không lấy được âm thanh từ TTS");
+
+        const blob = await res.blob();
+        const arrayBuffer = await blob.arrayBuffer();
+
+        const audioContext = new AudioContext();
+        const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+        const source = audioContext.createBufferSource();
+        source.buffer = audioBuffer;
+
+        const destination = audioContext.createMediaStreamDestination();
+        source.connect(destination);
+        source.playbackRate.value = 1.2;
+
+        const stream = destination.stream;
+        const track = stream.getAudioTracks()[0];
+
+        // Thay thế đường tiếng hiện tại trong cuộc gọi
+        const sender = session.connection.getSenders().find(s => s.track?.kind === 'audio');
+        if (sender) {
+            await sender.replaceTrack(track);
+        } else {
+            session.connection.addTrack(track, stream);
+        }
+        source.onended = async () => {
+            try {
+                await audioContext.close(); // luôn đóng context
+            } catch (e) {
+                console.warn('Không thể đóng AudioContext:', e);
+            }
+            if (isEnded) {
+                console.log('[INFO] Bot kết thúc cuộc gọi sau khi nói xong.');
+                session.terminate();
+            }
+        };
+        source.start();
+    } catch (error) {
+        console.error("Lỗi khi phát TTS vào cuộc gọi:", error);
+    }
+}
+
+async function waitUntilRemoteUserStopsSpeaking(remoteStream, minSilenceMs = 3000) {
+    return new Promise((resolve) => {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const source = audioContext.createMediaStreamSource(remoteStream);
+        const analyser = audioContext.createAnalyser();
+        analyser.fftSize = 2048;
+        source.connect(analyser);
+
+        const data = new Uint8Array(analyser.fftSize);
+        let hasSpoken = false;
+        let timeoutId = null;
+        const check = () => {
+            analyser.getByteTimeDomainData(data);
+            const rms = Math.sqrt(data.reduce((acc, val) => acc + ((val - 128) ** 2), 0) / data.length);
+
+            if (rms > 5) {
+                hasSpoken = true;
+                if (timeoutId) clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => {
+                    cleanup();
+                    resolve();
+                }, minSilenceMs);
+            }
+
+            requestAnimationFrame(check);
+        };
+
+        const cleanup = () => {
+            if (timeoutId) clearTimeout(timeoutId);
+            source.disconnect();
+            analyser.disconnect();
+            if (audioContext.state !== 'closed') audioContext.close();
+        };
+
+        check();
+    });
 }

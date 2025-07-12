@@ -19,6 +19,8 @@ public partial class ClinicAppointmentContext : DbContext
 
     public virtual DbSet<DatLichHen> DatLichHens { get; set; }
 
+    public virtual DbSet<GhiAm> GhiAms { get; set; }
+
     public virtual DbSet<PhongKham> PhongKhams { get; set; }
 
     public virtual DbSet<ThongTinPhongKham> ThongTinPhongKhams { get; set; }
@@ -72,6 +74,7 @@ public partial class ClinicAppointmentContext : DbContext
             entity.Property(e => e.GioiTinh).HasMaxLength(10);
             entity.Property(e => e.HovaTen).HasMaxLength(250);
             entity.Property(e => e.NgheNghiep).HasMaxLength(250);
+            entity.Property(e => e.QuocTich).HasMaxLength(50);
             entity.Property(e => e.SoDienThoai).HasMaxLength(250);
         });
 
@@ -81,7 +84,7 @@ public partial class ClinicAppointmentContext : DbContext
 
             entity.ToTable("DatLichHen");
 
-            entity.Property(e => e.LichHenId).HasColumnName("LichHenID").ValueGeneratedOnAdd();
+            entity.Property(e => e.LichHenId).HasColumnName("LichHenID");
             entity.Property(e => e.BenhNhanId).HasColumnName("BenhNhanID");
             entity.Property(e => e.Gio).HasMaxLength(10);
             entity.Property(e => e.LyDoKham).HasMaxLength(255);
@@ -94,6 +97,32 @@ public partial class ClinicAppointmentContext : DbContext
             entity.HasOne(d => d.PhongKham).WithMany(p => p.DatLichHens)
                 .HasForeignKey(d => d.PhongKhamId)
                 .HasConstraintName("FK__DatLichHe__Phong__5441852A");
+        });
+
+        modelBuilder.Entity<GhiAm>(entity =>
+        {
+            entity.ToTable("GhiAm");
+
+            entity.Property(e => e.GhiAmId)
+                .ValueGeneratedNever()
+                .HasColumnName("GhiAmID");
+            entity.Property(e => e.CuocGoiId)
+                .HasMaxLength(100)
+                .HasColumnName("CuocGoiID");
+            entity.Property(e => e.Huong).HasMaxLength(50);
+            entity.Property(e => e.SoDauCuoi)
+                .HasMaxLength(10)
+                .IsFixedLength();
+            entity.Property(e => e.SoNguoiGoi)
+                .HasMaxLength(10)
+                .IsFixedLength();
+            entity.Property(e => e.SoNguoiNghe)
+                .HasMaxLength(10)
+                .IsFixedLength();
+            entity.Property(e => e.ThoiGianBatDau).HasMaxLength(50);
+            entity.Property(e => e.ThoiGianKetThuc).HasMaxLength(50);
+            entity.Property(e => e.TongThoiLuong).HasMaxLength(50);
+            entity.Property(e => e.TrangThaiCuocGoi).HasMaxLength(50);
         });
 
         modelBuilder.Entity<PhongKham>(entity =>

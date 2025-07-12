@@ -62,6 +62,7 @@ namespace ClinicAppointmentServer.Repositories.Implements
 						DiaChi = dlh.BenhNhan.DiaChi,
 						DanToc = dlh.BenhNhan.DanToc,
 						NgheNghiep = dlh.BenhNhan.NgheNghiep,
+						QuocTich = dlh.BenhNhan.QuocTich
 					}
 				});
 			return query;

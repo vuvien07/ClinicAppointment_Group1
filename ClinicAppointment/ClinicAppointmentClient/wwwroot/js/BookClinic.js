@@ -1,6 +1,10 @@
 ﻿const host = window.location.hostname;
 let isStartCallAI = false;
 let totalFilterSchedulePage = 0;
+let isLoadedRecord = false;
+let isBookedFail = false;
+let isBookedSuccess = false;
+let isCalledWithClient = false;
 
 let filterpatientSchedule = {
     page: 1,
@@ -10,7 +14,37 @@ let filterpatientSchedule = {
     keyword: '',
     startDate: '',
     endDate: ''
-} 
+}
+
+let filterCall = {
+    "starttime": "2023-01-01T00:00:00+07:00",
+    "endtime": "2026-01-28T13:59:00+07:00",
+    "call_id": "",
+    "customer_number": "",
+    "callType": "",
+    "agent": [],
+    "ipPhone": "",
+    "transactionId": "",
+    "page": 1,
+    "limit": 5,
+    "call_status": "hangup",
+    "direction":"inbound"
+}
+
+let bookClinicForm = {
+    HoVaTen: '',
+    GioiTinh: '',
+    NgaySinhStr: '',
+    SoDienThoai: '',
+    DiaChi: '',
+    Cccd: '',
+    NgheNghiep: '',
+    DanToc: '',
+    PhongKhamId: 0,
+    Gio: '',
+    LyDoKham: '',
+    QuocTich: ''
+}
 
 window.onload = async () => {
     const params = new URLSearchParams(window.location.search);
@@ -21,17 +55,24 @@ window.onload = async () => {
     }
     document.querySelector('.chat-container').innerHTML = '';
     await getClinicList();
-        audioRemote = document.getElementById("audio_remote");
-        addHtmlLogin();
-        addHtml();
-        loadCredentials();
+    audioRemote = document.getElementById("audio_remote");
+    //addHtmlLogin();
+    //addHtml();
+    //loadCredentials();
 
-        if (usingAutoLogin === 1) {
-            onRegister();
-            loadContentPhoneDial();
-        } else {
-            loadContentPhone();
-        }
+    //if (usingAutoLogin === 1) {
+    //    onRegister();
+    //    loadContentPhoneDial();
+    //} else {
+    //    loadContentPhone();
+    //}
+    addHtml();
+    //loadContentPhoneDial();
+    addHtmlLogin();
+    onRegister();
+    document.querySelector('#alohub_call_dial').style.display = 'none';
+    document.querySelector('#alohub_calling_content').style.display = 'none';
+    document.querySelector('#alohub_answer_content').style.display = 'none';
 }
 
 async function startCall(e) {
@@ -152,7 +193,7 @@ async function UpdateClinicList(data) {
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">${item.thongTinPhongKhams[0]?.hen || 0}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">${item.thongTinPhongKhams[0]?.dangKy || 0}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">${item.thongTinPhongKhams[0]?.kham || 0}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">${(item.thongTinPhongKhams[0]?.hen || 0) + (item.thongTinPhongKhams[0]?.dangKy || 0) + (item.thongTinPhongKhams[0]?.kham || 0) }</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">${(item.thongTinPhongKhams[0]?.hen || 0) + (item.thongTinPhongKhams[0]?.dangKy || 0) + (item.thongTinPhongKhams[0]?.kham || 0)}</td>
          </tr>
         `;
     });
@@ -197,20 +238,6 @@ async function sendMessageAndReceiveAnswer() {
 }
 
 async function answerUserPrompt(input) {
-    const inputLabel = ['HovaTen', 'GioiTinh', 'NgaySinhStr', 'SoDienThoai', 'Cccd', 'NgheNghiep', 'DanToc', 'LyDoKham', 'QuocTich', 'PhongKhamId'];
-    let prompt = input.value;
-    input.value = '';
-    const div = document.createElement('div');
-    div.className = 'bot-message d-flex';
-    const icon = document.createElement('i');
-    icon.className = 'bi bi-robot mt-2 me-2 bot-icon';
-    const text = document.createElement('p');
-    text.className = 'message-text color-white';
-    text.textContent = '...';
-    div.appendChild(icon);
-    div.appendChild(text);
-    document.querySelector('.chat-container').appendChild(div);
-
     try {
         const res = await fetch(`http://${host}:5132/api/gemini/ask`, {
             method: "POST",
@@ -218,11 +245,10 @@ async function answerUserPrompt(input) {
                 "Content-Type": "application/json",
                 "token": localStorage.getItem("token") || ""
             },
-            body: JSON.stringify({ Prompt: prompt }),
+            body: JSON.stringify({ Prompt: input }),
         });
 
         if (res.ok) {
-            document.querySelector('.chat-container').removeChild(div);
             const json = await res.json();
             if (json.result) {
                 const parts = json.result.split("\n").filter(part => part.includes(":"));
@@ -232,9 +258,7 @@ async function answerUserPrompt(input) {
                     const value = valueRaw?.trim() || "";
 
                     if (label.includes("Tên")) {
-                        const input = document.querySelector('input[name="HovaTen"]');
-                        if (input) input.value = value;
-                        else console.warn("Input 'HovaTen' not found");
+                        bookClinicForm.HoVaTen = value;
                     }
 
                     if (label.includes("Ngày sinh")) {
@@ -247,9 +271,7 @@ async function answerUserPrompt(input) {
                                 const mm = String(parsedDate.getMonth() + 1).padStart(2, '0');
                                 const dd = String(parsedDate.getDate()).padStart(2, '0');
                                 const formatted = `${yyyy}-${mm}-${dd}`;
-                                const input = document.querySelector('input[name="NgaySinhStr"]');
-                                if (input) input.value = formatted;
-                                else console.warn("Input 'NgaySinhStr' not found");
+                                bookClinicForm.NgaySinhStr = formatted;
                             } else {
                                 console.warn("Invalid date format:", rawDate);
                             }
@@ -257,72 +279,48 @@ async function answerUserPrompt(input) {
                     }
 
                     if (label.includes("Số điện thoại")) {
-                        const input = document.querySelector('input[name="SoDienThoai"]');
-                        if (input) input.value = value;
-                        else console.warn("Input 'SoDienThoai' not found");
+                        bookClinicForm.SoDienThoai = value;
                     }
 
                     if (label.includes("Địa chỉ")) {
-                        const input = document.querySelector('input[name="DiaChi"]');
-                        if (input) input, input.value = value;
-                        else console.warn("Input 'DiaChi' not found");
+                        bookClinicForm.DiaChi = value;
                     }
 
                     if (label.includes("Lí do khám")) {
-                        const input = document.querySelector('input[name="LyDoKham"]');
-                        if (input) input.value = value;
-                        else console.warn("Input 'LyDoKham' not found");
+                        bookClinicForm.LyDoKham = value;
                     }
 
                     if (label.includes("Nghề nghiệp")) {
-                        const input = document.querySelector('input[name="NgheNghiep"]');
-                        if (input) input.value = value;
-                        else console.warn("Input 'NgheNghiep' not found");
+                        bookClinicForm.NgheNghiep = value;
                     }
 
                     if (label.includes("Căn cước công dân")) {
-                        const input = document.querySelector('input[name="Cccd"]');
-                        if (input) input.value = value;
-                        else console.warn("Input 'Cccd' not found");
+                        bookClinicForm.Cccd = value;
                     }
 
                     if (label.includes("Giới tính")) {
-                        const select = document.querySelector('select[name="GioiTinh"]');
-                        if (select) {
-                            const options = Array.from(select.options).map(opt => opt.value);
-                            select.value = options.includes(value) ? value : "";
-                        } else {
-                            console.warn("Select 'GioiTinh' not found");
-                        }
+                        bookClinicForm.GioiTinh = value;
                     }
 
                     if (label.includes("Quốc tịch")) {
-                        const select = document.querySelector('select[name="QuocTich"]');
-                        if (select) {
-                            const options = Array.from(select.options).map(opt => opt.value);
-                            select.value = options.includes(value) ? value : "Khác";
-                        } else {
-                            console.warn("Select 'QuocTich' not found");
-                        }
+                        bookClinicForm.QuocTich = value;
                     }
 
                     if (label.includes("Dân tộc")) {
-                        const select = document.querySelector('select[name="DanToc"]');
-                        if (select) {
-                            const options = Array.from(select.options).map(opt => opt.value);
-                            select.value = options.includes(value) ? value : "Khác";
-                        } else {
-                            console.warn("Select 'DanToc' not found");
-                        }
+                        bookClinicForm.DanToc = value;
+                    }
+                    if (label.includes("Giờ khám")) {
+                        bookClinicForm.Gio = value;
+                    }
+                    if (label.includes("Phòng khám")) {
+                        bookClinicForm.PhongKhamId = parseInt(value) || 0;
                     }
                 });
-                await textToSpeech(json.result);
             }
         } else {
             throw new Error("Failed to fetch response from Gemini API");
         }
     } catch (err) {
-        text.textContent = 'Có lỗi xảy ra: ' + err.message;
         console.error("Error in answerUserPrompt:", err);
     }
 }
@@ -402,6 +400,30 @@ async function speechToText(blob) {
     try {
         const formData = new FormData();
         formData.append("file", blob, "recording.wav");
+        const res = await fetch(`http://${host}:8080/speech-to-text`, {
+            method: "POST",
+            body: formData
+        });
+        if (res.ok) {
+            const json = await res.json();
+            const input = document.querySelector('input[name="userPrompt"]');
+            if (input) {
+                input.value = json.transcription || "";
+            } else {
+                console.warn("User prompt input not found for speech-to-text");
+            }
+        } else {
+            showSnackbar("Có lỗi xảy ra trong quá trình nhận diện giọng nói", "error");
+        }
+    } catch (err) {
+        showSnackbar("Có lỗi xảy ra trong quá trình nhận diện giọng nói", "error");
+        console.error("Error in speechToText:", err);
+    }
+}
+async function speechToTextWithMp3(blob) {
+    try {
+        const formData = new FormData();
+        formData.append("file", blob, "recording.mp3");
         const res = await fetch(`http://${host}:8080/speech-to-text`, {
             method: "POST",
             body: formData
@@ -541,7 +563,7 @@ async function fetchAllPatientSchedule(e) {
             updatePatientScheduleTable(json.schedules);
             totalFilterSchedulePage = json.totalPage;
             document.getElementById('current-page').innerText = json.page;
-            document.getElementById('total-records').innerText = (json.schedules?.length || 0)  + " / " + (filterpatientSchedule.pageSize || 0);
+            document.getElementById('total-records').innerText = (json.schedules?.length || 0) + " / " + (filterpatientSchedule.pageSize || 0);
         } else {
             showSnackbar("Lỗi khi lấy lịch khám", "error");
         }
@@ -550,6 +572,38 @@ async function fetchAllPatientSchedule(e) {
         showSnackbar("Có lỗi xảy ra", "error");
     }
 }
+
+async function fetchAllCallHistory(e) {
+    e.preventDefault();
+    if (!isLoadedRecord) {
+        showLoading();
+        try {
+            const response = await fetch(`https://2.alohub.vn:9909/api/v1.0/base/searchCallV1?userName=admin.vienvu&source=ipcc`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "brhsgtpukcjjzpxvfibxebcoqlcuen"
+                },
+                body: JSON.stringify(filterCall),
+            });
+
+            const json = await response.json();
+
+            if (response.ok) {
+                updateRecordTable(json.data);
+            } else {
+                showSnackbar("Lỗi khi lấy lịch khám", "error");
+            }
+        } catch (err) {
+            console.error(err);
+            showSnackbar("Có lỗi xảy ra", "error");
+        } finally {
+            hideLoading(); // Always hide spinner when done
+            isLoadedRecord = true;
+        }
+    }
+}
+
 
 
 function updatePatientScheduleTable(data) {
@@ -576,6 +630,28 @@ function updatePatientScheduleTable(data) {
 
 }
 
+function updateRecordTable(data) {
+    let contentHtml = ``;
+    data?.map((record, index) => {
+        contentHtml += `
+        <tr>
+    <td class="border p-2">${index + 1}</td>
+    <td class="border p-2">${record.called || ''}</td>
+    <td class="border p-2">${record.caller_number || ''}</td>
+    <td class="border p-2">${record.starttime || ''}</td>
+    <td class="border p-2">${record.endtime || ''}</td>
+    <td class="border p-2">${record.total_duration || ''}</td>
+    <td class="border p-2">
+        <button onclick="fetchRecordUrl('https://2.alohub.vn:1777/IPCCMedia/MP3Export.do?url=${encodeURIComponent(record.recording_url || '')}&source=ipcc')">Link</button>
+    </td>
+    <td class="border p-2"> <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="bookClientAppointment('https://2.alohub.vn:1777/IPCCMedia/MP3Export.do?url=${encodeURIComponent(record.recording_url || '')}&source=ipcc', '${record.caller_number || ''}')">Đặt lịch hẹn</button></td>
+</tr>
+        `;
+    });
+    document.getElementById('record-table-body').innerHTML = contentHtml;
+
+}
+
 function autoCompleteClinicForm(e, element) {
     e.preventDefault();
     let parsedData = JSON.parse(element.dataset.schedule);
@@ -590,4 +666,57 @@ function autoCompleteClinicForm(e, element) {
     document.querySelector('input[name="NgheNghiep"').value = parsedData.patientDTO?.ngheNghiep || '';
     document.querySelector('select[name="GioiTinh"').value = parsedData.patientDTO?.gioiTinh || '';
     document.querySelector('input[name="LichHenId"]').value = parsedData.lichHenId || 0;
+}
+
+async function fetchRecordUrl(url) {
+    try {
+        const encodedUrl = encodeURIComponent(url);
+
+        const response = await fetch(`http://localhost:5132/api/recordProxy/mp3?url=${encodedUrl}`);
+        if (response.ok) {
+            const blob = await response.blob();
+            const audio = new Audio(URL.createObjectURL(blob));
+            audio.play();
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function bookClientAppointment(url, callerNumber) {
+    try {
+        const encodedUrl = encodeURIComponent(url);
+
+        const response = await fetch(`http://localhost:5132/api/recordProxy/mp3?url=${encodedUrl}`);
+        if (response.ok) {
+            const blob = await response.blob();
+            const formData = new FormData();
+            formData.append("file", blob, "recording.mp3");
+            const speechToTextRes = await fetch(`http://${host}:8080/speech-to-text`, {
+                method: "POST",
+                body: formData
+            });
+            if (speechToTextRes.ok) {
+                const json = await speechToTextRes.json();
+                await answerUserPrompt(json.transcription || "")
+                const res = await fetch(`http://${host}:5132/api/BookClinic/create`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(bookClinicForm)
+                });
+                if (!res.ok) {
+                    isBookedFail = true;
+                    onCallWithProvidedNumber(callerNumber)
+                }
+                if (res.ok) {
+                    isBookedSuccess = true;
+                    onCallWithProvidedNumber(callerNumber)
+                }
+            }
+        }
+    } catch (err) {
+        console.log(err);
+    }
 }

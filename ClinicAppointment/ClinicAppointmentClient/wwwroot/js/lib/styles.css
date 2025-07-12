@@ -156,7 +156,7 @@ button.alohub_button-call:hover svg {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 99;
+    z-index: 9999;
 }
 
 #alohub_calling_content .alohub_icon_full, #alohub_answer_content .alohub_icon_full {

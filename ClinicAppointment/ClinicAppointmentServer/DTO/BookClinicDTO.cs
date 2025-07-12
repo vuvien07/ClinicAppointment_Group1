@@ -23,7 +23,7 @@ namespace ClinicAppointmentServer.DTO
 		public string? Cccd{get;set;}
 		[Required(ErrorMessage = "Vui lòng nhập nghề nghiệp")]
 		public string? NgheNghiep{get;set;}
-		[Required(ErrorMessage = "Vui lòng nhập dân tộc")]
+		//[Required(ErrorMessage = "Vui lòng nhập dân tộc")]
 		public string? DanToc{get;set;}
 		public int LichHenId{get;set;}
 		public int? BenhNhanId{get;set;}
