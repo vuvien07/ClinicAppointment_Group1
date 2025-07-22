@@ -4,7 +4,9 @@ let totalFilterSchedulePage = 0;
 let isLoadedRecord = false;
 let isBookedFail = false;
 let isBookedSuccess = false;
-let isCalledWithClient = false;
+let isSystemCall = false;
+let isUserCall = false;
+
 
 let filterpatientSchedule = {
     page: 1,
@@ -469,6 +471,7 @@ async function submitBookClinicForm(e) {
         });
         const json = await res.json();
         if (!res.ok) {
+            isBookedFail = true;
             if (json.errors) {
                 labels.forEach(label => DisplayError(label, json.errors));
                 showSnackbar("Vui lòng kiểm tra các trường thông tin", "error");
@@ -477,6 +480,7 @@ async function submitBookClinicForm(e) {
             }
         } else {
             showSnackbar("Đặt lịch khám thành công", "success");
+            isBookedSuccess = true;
             await getClinicList();
         }
     } catch (err) {
@@ -686,7 +690,7 @@ async function fetchRecordUrl(url) {
 async function bookClientAppointment(url, callerNumber) {
     try {
         const encodedUrl = encodeURIComponent(url);
-
+        showLoading();
         const response = await fetch(`http://localhost:5132/api/recordProxy/mp3?url=${encodedUrl}`);
         if (response.ok) {
             const blob = await response.blob();
@@ -707,10 +711,12 @@ async function bookClientAppointment(url, callerNumber) {
                     body: JSON.stringify(bookClinicForm)
                 });
                 if (!res.ok) {
+                    hideLoading();
                     isBookedFail = true;
                     onCallWithProvidedNumber(callerNumber)
                 }
                 if (res.ok) {
+                    hideLoading();
                     isBookedSuccess = true;
                     onCallWithProvidedNumber(callerNumber)
                 }

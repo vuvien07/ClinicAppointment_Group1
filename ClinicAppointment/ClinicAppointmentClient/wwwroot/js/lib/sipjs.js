@@ -427,7 +427,7 @@ function onRegister() {
         session.on('ended', function () {
             session = null;
             console.log('===ended===');
-            loadContentPhoneDial();
+            //loadContentPhoneDial();
             onClearInterVal();
             document.querySelector('#alohub_call_dial').style.display = 'none';
             document.querySelector('#alohub_calling_content').style.display = 'none';
@@ -443,7 +443,10 @@ function onRegister() {
         session.on('failed', function () {
             session = null;
             console.log('===failed===');
-            loadContentPhoneDial();
+            //loadContentPhoneDial();
+            document.querySelector('#alohub_call_dial').style.display = 'none';
+            document.querySelector('#alohub_calling_content').style.display = 'none';
+            document.querySelector('#alohub_answer_content').style.display = 'none';
         });
 
         session.on('accepted', function () {
@@ -454,20 +457,26 @@ function onRegister() {
         session.on('confirmed', async function () {
             console.log('===confirmed===');
             stopRingTone();
-            if (isCalledWithClient) {
-                await playTTSAndSendToCall(session, 'Lãnh thổ Việt Nam xuất hiện con người sinh sống từ thời đại đồ đá cũ, khởi đầu với các nhà nước Văn Lang, Âu Lạc. Âu Lạc bị nhà Triệu ở phương Bắc thôn tính vào đầu');
-                await waitUntilRemoteUserStopsSpeaking(audioRemote.srcObject, 3000);
-                 await playTTSAndSendToCall(session, 'Âu Lạc bị nhà Triệu ở phương Bắc thôn tính vào đầu.', true);
-            }
-            if (isBookedFail) {
+
+            if (isSystemCall && isBookedFail) {
                 await playTTSAndSendToCall(session, 'Đặt lịch thất bại. Xin vui lòng thử lại. Trân trọng cảm ơn.', true);
                 isBookedFail = false;
-            }
-            if (isBookedSuccess) {
+                isSystemCall = false;
+            } else if (isSystemCall && isBookedSuccess) {
                 await playTTSAndSendToCall(session, 'Đặt lịch thành công. Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.', true);
                 isBookedSuccess = false;
+                isSystemCall = false;
+            } else if (isSystemCall || isUserCall) {
+                await playTTSAndSendToCall(session, 'Chào mừng bạn đến với hệ thống phòng khám của chúng tôi. Bạn vui lòng cung cấp các thông tin cho chúng tôi bao gồm họ tên, ngày sinh, giới tính, số điện thoại, địa chỉ, nghề nghiệp, quốc tịch, dân tộc, lí do khám và giờ khám được không?');
+                console.log("Đang chờ bạn nói...");
+                await waitUntilRemoteUserStopsSpeaking(audioRemote.srcObject, 3000);
+                console.log("Bạn đã ngừng nói");
+                await playTTSAndSendToCall(session, 'Cảm ơn bạn đã cung cấp thông tin cho chúng tôi. Chúng tôi sẽ gửi đến phản hồi nhanh nhất cho quý vị', true);
+                isSystemCall = false;
+                isUserCall = false;
             }
         });
+
 
         session.on('addstream', function (e) {
             console.log('===addstream===');
@@ -514,6 +523,7 @@ function onRegister() {
 
         if (session.direction === 'incoming') {
             console.log('===incoming===');
+            isUserCall = true;
             console.log('===number===');
             if (isAutoAnswer === 0) {
                 startRingTone();
@@ -522,6 +532,7 @@ function onRegister() {
                 onAnswer();
             }
         } else {
+            isSystemCall = true;
             console.log('session connection', session.connection)
             session.connection.addEventListener('addstream', function (e) {
                 audioRemote.srcObject = e.stream;

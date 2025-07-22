@@ -95,9 +95,9 @@
             @*     <span class="status-dot status-completed"></span><span class="text-sm">Đã có kết quả</span> *@
             @* </div> *@
             <div class="flex items-center space-x-2">
-                <button class="border rounded p-1" onclick="clickPrevious(event)">◄</button>
+                <button class="border rounded p-1" onclick="clickPreviousRecordPage(event)">◄</button>
                 <span class="text-sm" id="current-page">1</span>
-                <button class="border rounded p-1" onclick="clickNext(event)">►</button>
+                <button class="border rounded p-1" onclick="clickNextRecordPage(event)">►</button>
                 <span class="text-sm">Số hàng: </span>
                 <select id="rows-per-page" onchange="changeRecordLimit(event)" class="border rounded p-1">
                     <option value="" selected>15</option>

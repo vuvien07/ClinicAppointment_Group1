@@ -55,20 +55,20 @@ namespace ClinicAppointmentServer.Services.Implements
 			{
 				BenhNhan benhNhan = Mapper.Map<BookClinicDTO, BenhNhan>(bookClinicDTO) ?? new BenhNhan();
 				DatLichHen datLichHen = Mapper.Map<BookClinicDTO, DatLichHen>(bookClinicDTO) ?? new DatLichHen();
-				BenhNhan? findPatient = await _patientRepository.GetPatientByCccdAndPhone(bookClinicDTO.Cccd, bookClinicDTO.SoDienThoai);
-				if(findPatient == null)
-				{
+				//BenhNhan? findPatient = await _patientRepository.GetPatientByCccdAndPhone(bookClinicDTO.Cccd, bookClinicDTO.SoDienThoai);
+				//if(findPatient == null)
+				//{
 					await _patientRepository.AddPatient(benhNhan);
+				//	datLichHen.BenhNhanId = benhNhan.BenhNhanId;
+				//	datLichHen.Ngay = DateOnly.FromDateTime(DateTime.Now);
+				//	datLichHen.Gio = bookClinicDTO.Gio;
+				//}
+				//else
+				//{
 					datLichHen.BenhNhanId = benhNhan.BenhNhanId;
 					datLichHen.Ngay = DateOnly.FromDateTime(DateTime.Now);
 					datLichHen.Gio = bookClinicDTO.Gio;
-				}
-				else
-				{
-					datLichHen.BenhNhanId = findPatient.BenhNhanId;
-					datLichHen.Ngay = DateOnly.FromDateTime(DateTime.Now);
-					datLichHen.Gio = bookClinicDTO.Gio;
-				}
+				//}
 				ThongTinPhongKham? thongTinPhongKham = await _clinicInfoRepository.GetClinicInfo(DateOnly.FromDateTime(DateTime.Now), bookClinicDTO.PhongKhamId ?? 0);
 				if (thongTinPhongKham == null)
 				{
